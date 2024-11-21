@@ -1,0 +1,24 @@
+.userDiv {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 0 1 300px;
+  border: 5px solid rgba(0, 0, 0, 0.733);
+  border-left: none;
+  border-radius: 10px;
+  background-color: blue;
+}
+
+.topUser {
+  flex: auto;
+}
+
+.midUser {
+  flex: auto;
+}
+.bottomUser {
+  flex: auto;
+}
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
