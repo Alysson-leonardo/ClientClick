@@ -1,0 +1,11 @@
+.ladingpage {
+  display: flex;
+  background-color: blue;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+}
+.container {
+  display: flex;
+  height: 100%;
+}
