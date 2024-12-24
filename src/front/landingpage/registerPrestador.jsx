@@ -4,9 +4,18 @@ function RegisterPrestador() {
   return (
     <div className={style.login}>
       <div className={style.cabecalho}>
-        <h1>Cadastro prestador</h1>
+        <h1>
+          Cadastro <b>prestador</b>
+        </h1>
         <button>
-          <Link to="/registerClient">Botao</Link>
+          <Link to="/registerClient">
+            <span
+              class="material-symbols-outlined"
+              title="Alternar para cliente"
+            >
+              sync_alt
+            </span>
+          </Link>
         </button>
       </div>
       <form className={style.form}>

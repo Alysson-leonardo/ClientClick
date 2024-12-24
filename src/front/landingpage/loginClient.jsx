@@ -6,7 +6,14 @@ function LoginClient() {
       <div className={style.cabecalho}>
         <h1>Login Cliente</h1>
         <button>
-          <Link to="/loginPrestador">Botao</Link>
+          <Link to="/loginPrestador">
+            <span
+              class="material-symbols-outlined"
+              title="Alternar para prestador"
+            >
+              sync_alt
+            </span>
+          </Link>
         </button>
       </div>
       <form className={style.form}>
