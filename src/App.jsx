@@ -1,16 +1,35 @@
 // style
 import "./App.css";
 // componentes
-import UserPage from "./front/userPage";
-import FeedUsers from "./front/feedUsersPage";
-import ChatPage from "./front/chatPage";
+
 import LandingPage from "./front/landingpage/landingPage";
-// rotas
+import PaginaCliente from "./front/usuarios/Cliente/clientPage";
+import PaginaPrestador from "./front/usuarios/prestador/prestadorPage";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+// rotas landingopage
+
 function App() {
   return (
-    <div className="container">
-      <LandingPage></LandingPage>
-    </div>
+    <Router>
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<LandingPage></LandingPage>}>
+            <Route path="/loginClient"></Route>
+            <Route path="/registerClient"></Route>
+            <Route path="/loginPrestador"></Route>
+            <Route path="/registerPrestador"></Route>
+          </Route>
+          <Route
+            path="pagina-cliente"
+            element={<PaginaCliente></PaginaCliente>}
+          />
+          <Route
+            path="pagina-prestador"
+            element={<PaginaPrestador></PaginaPrestador>}
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
