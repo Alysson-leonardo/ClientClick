@@ -3,9 +3,9 @@ import LoginClient from "./loginClient";
 import RegisterClient from "./registerClient";
 import LoginPrestador from "./loginPrestador";
 import RegisterPrestador from "./registerPrestador";
-import style from "./ladingPage.module.css";
+import style from "./landingPage.module.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-function LadingPage() {
+function LandingPage() {
   return (
     <Router>
       <div className={style.ladingpage}>
@@ -15,6 +15,7 @@ function LadingPage() {
         ></NavBar>
         <div className={style.container}>
           <Routes>
+            <Route path="/" element={<LoginClient />}></Route>
             <Route path="/loginClient" element={<LoginClient />}></Route>
             <Route path="/registerClient" element={<RegisterClient />}></Route>
             <Route path="/loginPrestador" element={<LoginPrestador />}></Route>
@@ -28,4 +29,4 @@ function LadingPage() {
     </Router>
   );
 }
-export default LadingPage;
+export default LandingPage;
