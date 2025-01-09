@@ -12,14 +12,14 @@ function UserPage() {
           </div>
         </div>
       </div>
+      <hr />
       <div className={styles.midUser}>
-        <hr />
         <p>Agendamentos</p>
         <p>Contratos de serviços</p>
         <p>Pedidos</p>
       </div>
+      <hr />
       <div className={styles.bottomUser}>
-        <hr />
         <p>configurações</p>
         <p>acessibilidade</p>
       </div>
