@@ -1,4 +1,4 @@
-import styles from "./userPage.module.css";
+import styles from "./userClientPage.module.css";
 
 function UserPage() {
   return (
@@ -9,18 +9,17 @@ function UserPage() {
           <h2>nome</h2>
           <div>
             <p>cpf</p>
-            <p>profissao</p>
-            <p>Avaliação</p>
           </div>
         </div>
       </div>
+      <hr />
       <div className={styles.midUser}>
-        <hr />
         <p>Agendamentos</p>
         <p>Contratos de serviços</p>
+        <p>Pedidos</p>
       </div>
+      <hr />
       <div className={styles.bottomUser}>
-        <hr />
         <p>configurações</p>
         <p>acessibilidade</p>
       </div>

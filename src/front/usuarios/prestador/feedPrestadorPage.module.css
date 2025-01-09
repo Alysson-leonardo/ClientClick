@@ -3,13 +3,13 @@
   flex-flow: column nowrap;
   flex: 2 1 260px;
   gap: 20px;
-  background-color: cyan;
+  background-color: rgb(149, 0, 255);
   padding: 0px 70px;
   align-items: center;
   overflow: auto;
 }
 .users {
   padding: 20px;
-  background-color: pink;
+  background-color: rgb(113, 165, 248);
   flex-basis: 300px;
 }

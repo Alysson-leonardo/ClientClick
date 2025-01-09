@@ -1,6 +1,7 @@
 .card {
-  background-color: pink;
+  background-color: rgb(101, 145, 239);
   display: flex;
   flex-flow: column nowrap;
   flex: 0 0 200px;
+  margin: 10px;
 }

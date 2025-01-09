@@ -1,9 +1,9 @@
 // react
 import { useState } from "react";
 // style
-import styles from "./feedUsersPage.module.css";
+import styles from "./feedClientPage.module.css";
 // componentes
-import CardUser from "../componentes/cardUser";
+import CardUser from "../../../componentes/cardUser";
 
 function FeedUsers() {
   const [users, setUsers] = useState([

@@ -1,41 +1,146 @@
+import { useState } from "react";
 import style from "./registerClient.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 function RegisterPrestador() {
+  const navigate = useNavigate();
+
+  const [nome, setNome] = useState("");
+  const [dataNasc, setDataNasc] = useState();
+  const [profissao, setProfissao] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [senha, setSenha] = useState("");
+  const [senhaCor, setsenhaCor] = useState("black");
+  const [senhaMensagem, setsenhaMensagem] = useState("Senha: ");
+
+  const [senhaCofirm, setSenhaCofirm] = useState("");
+  const [senhaCCor, setsenhaCCor] = useState("black");
+  const [senhaCMensagem, setsenhaCMensagem] = useState("Senha: ");
+
+  const [validSenha, setvalidSenha] = useState(true);
+  const [mensagem, setMensagem] = useState("");
+
+  // validação da senha
+  const statusSenha = (e) => {
+    setSenha(e.target.value);
+    if (senha.length < 8) {
+      setsenhaCor("red");
+      setsenhaMensagem("Senha: A senha precisa ter o minimo de 8 caracteres!");
+    } else {
+      setsenhaCor("green");
+      setsenhaMensagem("Senha: ");
+    }
+  };
+  const statusSenhaCofirm = (e) => {
+    setSenhaCofirm(e.target.value);
+    if (senhaCofirm.length < 8) {
+      setsenhaCCor("red");
+      setsenhaCMensagem("Senha: A senha precisa ter o minimo de 8 caracteres!");
+    } else {
+      setsenhaCCor("green");
+      setsenhaCMensagem("Senha: ");
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (senha == senhaCofirm) {
+      setMensagem("As senhas coincidem!");
+      setvalidSenha(true);
+      try {
+        const response = await fetch(
+          "http://localhost:8080/CadastroPrestador",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              nome,
+              dataNasc,
+              profissao,
+              email,
+              senha,
+              senhaCofirm,
+            }),
+          }
+        );
+        const dados = await response.json();
+        if (response.ok) {
+          setMensagem(dados.message);
+          setNome("");
+          setDataNasc("");
+          setProfissao("");
+          setEmail("");
+          setSenha("");
+          setSenhaCofirm("");
+          setTimeout(() => {
+            navigate("/loginPrestador");
+          }, 2000);
+        } else {
+          setMensagem(dados.message);
+        }
+      } catch (error) {
+        setMensagem("Erro ao enviar os dados!", error);
+      }
+    } else {
+      setMensagem("As senhas não coincidem!");
+      setvalidSenha(false);
+    }
+  };
+
   return (
     <div className={style.login}>
       <div className={style.cabecalho}>
-        <h1>Cadastro prestador</h1>
+        <h1>
+          Cadastro <b>prestador</b>
+        </h1>
         <button>
-          <Link to="/registerClient">Botao</Link>
+          <Link to="/registerClient">
+            <span
+              class="material-symbols-outlined"
+              title="Alternar para cliente"
+            >
+              sync_alt
+            </span>
+          </Link>
         </button>
       </div>
-      <form className={style.form}>
+      <form onSubmit={handleSubmit} className={style.form}>
         <label htmlFor="InameUser">Nome</label>
         <input
           type="text"
           name="userName"
           id="InameUser"
           placeholder="Primeiro nome"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          required
         />
         <label htmlFor="IdtNasc">Data de nascimento</label>
-        <input type="date" name="dtNascName" id="IdtNasc" />
-        <select name="professionName" id="">
+        <input
+          type="date"
+          name="dtNascName"
+          id="IdtNasc"
+          onChange={(e) => setDataNasc(e.target.value)}
+          value={dataNasc}
+          required
+        />
+        <label htmlFor="professionName">Profissão</label>
+        <select
+          name="professionName"
+          id="Iprofession"
+          value={profissao}
+          onChange={(e) => setProfissao(e.target.value)}
+          required
+        >
           <option value="">Seleciona uma profissão</option>
-          <option value="encanador" name="professionName">
-            Encanador
-          </option>
-          <option value="eletricista" name="professionName">
-            eletricista
-          </option>
-          <option value="mecanico" name="professionName">
-            mecanico
-          </option>
-          <option value="motoboy" name="professionName">
-            motoboy
-          </option>
-          <option value="faxineira" name="professionName">
-            faxineira
-          </option>
+          <option value="encanador">Encanador</option>
+          <option value="eletricista">eletricista</option>
+          <option value="mecanico">mecanico</option>
+          <option value="motoboy">motoboy</option>
+          <option value="faxineira">faxineira</option>
         </select>
         <label htmlFor="Iemail">Email</label>
         <input
@@ -43,26 +148,44 @@ function RegisterPrestador() {
           name="emailName"
           id="Iemail"
           placeholder="exemplo@gmail.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
         />
-        <label htmlFor="Isenha">Senha</label>
+        <label htmlFor="Isenha" style={{ color: senhaCor }}>
+          {senhaMensagem}
+        </label>
         <input
           type="password"
           name="senhaName"
           id="Isenha"
-          placeholder="*******"
+          placeholder="senha"
+          value={senha}
+          onChange={statusSenha}
+          minLength={8}
+          required
         />
-        <label htmlFor="IsenhaCofirm">Senha</label>
+        <label htmlFor="IsenhaCofirm" style={{ color: senhaCCor }}>
+          {senhaCMensagem}
+        </label>
         <input
           type="password"
           name="senhaCofirmName"
           id="IsenhaCofirm"
-          placeholder="*******"
+          placeholder="confirme a senha"
+          value={senhaCofirm}
+          onChange={statusSenhaCofirm}
+          minLength={8}
+          required
         />
+        <button type="submit">Cadastrar</button>
       </form>
+      {<p style={{ color: validSenha ? "greenyellow" : "red" }}>{mensagem}</p>}
       <h2>
         Já possui uma conta? <Link to="/loginPrestador">Faça login</Link>
       </h2>
     </div>
   );
 }
+
 export default RegisterPrestador;
