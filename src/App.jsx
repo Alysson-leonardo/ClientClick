@@ -19,10 +19,7 @@ function App() {
             <Route path="/loginPrestador"></Route>
             <Route path="/registerPrestador"></Route>
           </Route>
-          <Route
-            path="pagina-cliente"
-            element={<PaginaCliente></PaginaCliente>}
-          />
+          <Route path="/pagina-cliente/*" element={<PaginaCliente />} />
           <Route
             path="pagina-prestador"
             element={<PaginaPrestador></PaginaPrestador>}
