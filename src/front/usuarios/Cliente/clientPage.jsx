@@ -10,7 +10,7 @@ function PaginaCliente() {
       <UserPage />
       <div className={style.subcontainer}>
         <Routes>
-          <Route path="/" element={<FeedChat></FeedChat>}></Route>
+          <Route path="/ClientClick" element={<FeedChat></FeedChat>}></Route>
           <Route path="configuracoes" element={<ChatPage></ChatPage>}></Route>
         </Routes>
       </div>

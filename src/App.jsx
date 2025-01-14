@@ -13,15 +13,18 @@ function App() {
     <Router>
       <div className="container">
         <Routes>
-          <Route path="/" element={<LandingPage></LandingPage>}>
-            <Route path="/loginClient"></Route>
-            <Route path="/registerClient"></Route>
-            <Route path="/loginPrestador"></Route>
-            <Route path="/registerPrestador"></Route>
+          <Route path="/ClientClick" element={<LandingPage></LandingPage>}>
+            <Route path="/ClientClick/loginClient"></Route>
+            <Route path="/ClientClick/registerClient"></Route>
+            <Route path="/ClientClick/loginPrestador"></Route>
+            <Route path="/ClientClick/registerPrestador"></Route>
           </Route>
-          <Route path="/pagina-cliente/*" element={<PaginaCliente />} />
           <Route
-            path="pagina-prestador"
+            path="/ClientClick/pagina-cliente/*"
+            element={<PaginaCliente />}
+          />
+          <Route
+            path="/ClientClick/pagina-prestador"
             element={<PaginaPrestador></PaginaPrestador>}
           />
         </Routes>

@@ -67,7 +67,8 @@ function LoginPrestador() {
       </form>
       {mensagem}
       <h2>
-        Não possui uma conta? <Link to="/registerPrestador">Cadastra-se</Link>
+        Não possui uma conta?{" "}
+        <Link to="/ClientClick/registerPrestador">Cadastra-se</Link>
       </h2>
     </div>
   );
