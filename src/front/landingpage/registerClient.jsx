@@ -165,7 +165,7 @@ function RegisterClient() {
         </p>
       }
       <h2>
-        Já tem uma conta? <Link to="/ClientClick/loginClient">Faça login</Link>
+        Já tem uma conta? <Link to="/loginClient">Faça login</Link>
       </h2>
     </div>
   );

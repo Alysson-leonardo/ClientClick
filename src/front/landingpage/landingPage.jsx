@@ -9,26 +9,17 @@ function LandingPage() {
   return (
     <div className={style.ladingpage}>
       <NavBar
-        loginLink={"/ClientClick/loginClient"}
-        registerLink={"/ClientClick/registerClient"}
+        loginLink={"/loginClient"}
+        registerLink={"/registerClient"}
       ></NavBar>
       <div className={style.container}>
         <Routes>
-          <Route path="/ClientClick" element={<LoginClient />}></Route>
+          <Route path="/" element={<LoginClient />}></Route>
+          <Route path="/loginClient" element={<LoginClient />}></Route>
+          <Route path="/registerClient" element={<RegisterClient />}></Route>
+          <Route path="/loginPrestador" element={<LoginPrestador />}></Route>
           <Route
-            path="/ClientClick/loginClient"
-            element={<LoginClient />}
-          ></Route>
-          <Route
-            path="/ClientClick/registerClient"
-            element={<RegisterClient />}
-          ></Route>
-          <Route
-            path="/ClientClick/loginPrestador"
-            element={<LoginPrestador />}
-          ></Route>
-          <Route
-            path="/ClientClick/registerPrestador"
+            path="/registerPrestador"
             element={<RegisterPrestador />}
           ></Route>
           <Route>prestador</Route>

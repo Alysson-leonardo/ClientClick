@@ -83,8 +83,7 @@ function LoginClient() {
         }
       </form>
       <h2>
-        Não possui uma conta?{" "}
-        <Link to="/ClientClick/registerClient">Cadastra-se</Link>
+        Não possui uma conta? <Link to="/registerClient">Cadastra-se</Link>
       </h2>
     </div>
   );

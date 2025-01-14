@@ -182,8 +182,7 @@ function RegisterPrestador() {
       </form>
       {<p style={{ color: validSenha ? "greenyellow" : "red" }}>{mensagem}</p>}
       <h2>
-        Já possui uma conta?{" "}
-        <Link to="/ClientClick/loginPrestador">Faça login</Link>
+        Já possui uma conta? <Link to="/loginPrestador">Faça login</Link>
       </h2>
     </div>
   );

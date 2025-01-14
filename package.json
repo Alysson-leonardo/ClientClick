@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "backend": "node ./src/backend/server.js",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "clean": "rimraf build"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -31,6 +32,7 @@
     "eslint-plugin-react-refresh": "^0.4.14",
     "gh-pages": "^6.3.0",
     "globals": "^15.11.0",
+    "rimraf": "^6.0.1",
     "vite": "^5.4.10"
   }
 }
