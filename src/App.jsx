@@ -10,7 +10,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 function App() {
   return (
-    <Router>
+    <Router basename="/ClientClick">
       <div className="container">
         <Routes>
           <Route path="/" element={<LandingPage></LandingPage>}>

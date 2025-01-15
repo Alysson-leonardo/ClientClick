@@ -22,7 +22,6 @@ function LandingPage() {
             path="/registerPrestador"
             element={<RegisterPrestador />}
           ></Route>
-          <Route>prestador</Route>
         </Routes>
       </div>
     </div>
