@@ -8,7 +8,7 @@ function LoginPrestador() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8080/LoginPrestador", {
+      const response = await fetch("http://localhost:8080/loginPrestador", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -67,7 +67,7 @@ function LoginPrestador() {
       </form>
       {mensagem}
       <h2>
-        Não possui uma conta? <Link to="/registerPrestador">Cadastra-se</Link>
+        Não possui uma conta? <Link to="/registerProvider">Cadastra-se</Link>
       </h2>
     </div>
   );

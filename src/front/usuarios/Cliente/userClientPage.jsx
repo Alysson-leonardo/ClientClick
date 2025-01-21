@@ -1,27 +1,44 @@
 import styles from "./userClientPage.module.css";
-
-function UserPage() {
+import { Link } from "react-router-dom";
+function UserPage({ isDesktop }) {
   return (
-    <div className={styles.userDiv}>
-      <div className={styles.topUser}>
+    <div className={isDesktop ? styles.userDivDesktop : styles.userDivMobile}>
+      <div className={isDesktop ? styles.topUserDesktop : styles.topUserMobile}>
         <img src="" alt="" />
         <div>
-          <h2>nome</h2>
+          <h2 className={isDesktop ? "" : styles.textMobile}>nome</h2>
           <div>
             <p>cpf</p>
           </div>
         </div>
       </div>
-      <hr />
-      <div className={styles.midUser}>
+      <hr className={isDesktop ? "" : styles.hrcolor} />
+      <div className={isDesktop ? styles.midUserDesktop : styles.midUserMobile}>
         <p>Agendamentos</p>
         <p>Contratos de serviços</p>
         <p>Pedidos</p>
       </div>
       <hr />
-      <div className={styles.bottomUser}>
+      <div
+        className={
+          isDesktop ? styles.bottomUserDesktop : styles.bottomUserMobile
+        }
+      >
         <p>configurações</p>
         <p>acessibilidade</p>
+      </div>
+      <hr />
+      <div
+        className={
+          isDesktop ? styles.buttonUserDesktop : styles.buttonUserMobile
+        }
+      >
+        <button>
+          <Link to="/pagina-cliente/feed">Feed</Link>
+        </button>
+        <button>
+          <Link to={"/pagina-cliente/chat"}>Chat</Link>
+        </button>
       </div>
     </div>
   );

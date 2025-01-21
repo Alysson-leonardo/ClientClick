@@ -1,4 +1,5 @@
-.ladingpage {
+/*Desktop estilization*/
+.ladingpageDesktop {
   display: flex;
   background-color: blue;
   height: 100%;
@@ -8,4 +9,16 @@
 .container {
   display: flex;
   height: 100%;
+}
+/*Mobile estilization*/
+.ladingpageMobile {
+  display: flex;
+  background-color: red;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+}
+.containerMobile {
+  display: flex;
+  height: 150%;
 }

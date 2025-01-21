@@ -34,7 +34,7 @@ server.post("/loginCliente", (req, resp) => {
 
 //Rotas Prestador
 //cadastro
-server.post("/CadastroPrestador", (req, resp) => {
+server.post("/cadastroPrestador", (req, resp) => {
   const { nome, dataNasc, profissao, email, senha } = req.body;
   if (!nome || !dataNasc || !profissao || !email || !senha) {
     return resp
@@ -51,7 +51,7 @@ server.post("/CadastroPrestador", (req, resp) => {
   resp.status(201).json({ message: "Cadastro realizado com sucesso!" });
 });
 //login
-server.post("/LoginPrestador", (req, resp) => {
+server.post("/loginPrestador", (req, resp) => {
   const { email, senha } = req.body;
   if (!email || !senha) {
     return resp

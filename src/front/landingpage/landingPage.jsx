@@ -1,18 +1,26 @@
+//componentes
 import NavBar from "./navBar";
 import LoginClient from "./loginClient";
 import RegisterClient from "./registerClient";
 import LoginPrestador from "./loginPrestador";
 import RegisterPrestador from "./registerPrestador";
+//estulização
 import style from "./landingPage.module.css";
+//rotas
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-function LandingPage() {
+// useState
+
+function LandingPage({ isDesktop }) {
   return (
-    <div className={style.ladingpage}>
+    <div
+      className={isDesktop ? style.ladingpageDesktop : style.ladingpageMobile}
+    >
       <NavBar
         loginLink={"/loginClient"}
         registerLink={"/registerClient"}
+        isDesktop={isDesktop}
       ></NavBar>
-      <div className={style.container}>
+      <div className={isDesktop ? style.container : style.containerMobile}>
         <Routes>
           <Route path="/" element={<LoginClient />}></Route>
           <Route path="/loginClient" element={<LoginClient />}></Route>
@@ -22,7 +30,6 @@ function LandingPage() {
             path="/registerPrestador"
             element={<RegisterPrestador />}
           ></Route>
-          <Route>prestador</Route>
         </Routes>
       </div>
     </div>

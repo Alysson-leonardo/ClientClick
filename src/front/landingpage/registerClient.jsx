@@ -14,7 +14,7 @@ function RegisterClient() {
   const [senhaCor, setsenhaCor] = useState("black");
   const [senhaMensagem, setsenhaMensagem] = useState("Senha: ");
 
-  const [senhaCofirm, setSenhaCofirm] = useState("");
+  const [senhaConfirm, setSenhaConfirm] = useState("");
   const [senhaCCor, setsenhaCCor] = useState("black");
   const [senhaCMensagem, setsenhaCMensagem] = useState("Senha: ");
 
@@ -31,9 +31,9 @@ function RegisterClient() {
       setsenhaMensagem("Senha: ");
     }
   };
-  const statusSenhaCofirm = (e) => {
-    setSenhaCofirm(e.target.value);
-    if (senhaCofirm.length < 8) {
+  const statusSenhaConfirm = (e) => {
+    setSenhaConfirm(e.target.value);
+    if (senhaConfirm.length < 8) {
       setsenhaCCor("red");
       setsenhaCMensagem("Senha: A senha precisa ter o minimo de 8 caracteres!");
     } else {
@@ -86,7 +86,7 @@ function RegisterClient() {
       <div className={style.cabecalho}>
         <h1>Cadastro Cliente</h1>
         <button>
-          <Link to="/registerPrestador">
+          <Link to="/registerProvider">
             <span
               class="material-symbols-outlined"
               title="Alternar para prestador"
@@ -139,16 +139,16 @@ function RegisterClient() {
           minLength={8}
           required
         />
-        <label htmlFor="IsenhaCofirm" style={{ color: senhaCCor }}>
+        <label htmlFor="IsenhaConfirm" style={{ color: senhaCCor }}>
           {senhaCMensagem}
         </label>
         <input
           type="password"
-          name="senhaCofirmName"
-          id="IsenhaCofirm"
+          name="senhaConfirmName"
+          id="IsenhaConfirm"
           placeholder="Confirme a senha"
-          value={senhaCofirm}
-          onChange={statusSenhaCofirm}
+          value={senhaConfirm}
+          onChange={statusSenhaConfirm}
           minLength={8}
           required
         />

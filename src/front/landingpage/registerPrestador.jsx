@@ -50,7 +50,7 @@ function RegisterPrestador() {
       setvalidSenha(true);
       try {
         const response = await fetch(
-          "http://localhost:8080/CadastroPrestador",
+          "http://localhost:8080/cadastroPrestador",
           {
             method: "POST",
             headers: {
@@ -76,7 +76,7 @@ function RegisterPrestador() {
           setSenha("");
           setSenhaCofirm("");
           setTimeout(() => {
-            navigate("/loginPrestador");
+            navigate("/loginProvider");
           }, 2000);
         } else {
           setMensagem(dados.message);
@@ -182,7 +182,7 @@ function RegisterPrestador() {
       </form>
       {<p style={{ color: validSenha ? "greenyellow" : "red" }}>{mensagem}</p>}
       <h2>
-        Já possui uma conta? <Link to="/loginPrestador">Faça login</Link>
+        Já possui uma conta? <Link to="/loginProvider">Faça login</Link>
       </h2>
     </div>
   );

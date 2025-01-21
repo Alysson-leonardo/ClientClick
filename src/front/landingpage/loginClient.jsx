@@ -35,7 +35,7 @@ function LoginClient() {
         <h1>Login Cliente</h1>
 
         <button>
-          <Link to="/loginPrestador">
+          <Link to="/loginProvider">
             <span
               class="material-symbols-outlined"
               title="Alternar para prestador"
