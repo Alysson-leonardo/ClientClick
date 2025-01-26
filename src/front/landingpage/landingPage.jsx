@@ -25,9 +25,9 @@ function LandingPage({ isDesktop }) {
           <Route path="/" element={<LoginClient />}></Route>
           <Route path="/loginClient" element={<LoginClient />}></Route>
           <Route path="/registerClient" element={<RegisterClient />}></Route>
-          <Route path="/loginPrestador" element={<LoginPrestador />}></Route>
+          <Route path="/loginProvider" element={<LoginPrestador />}></Route>
           <Route
-            path="/registerPrestador"
+            path="/registerProvider"
             element={<RegisterPrestador />}
           ></Route>
         </Routes>

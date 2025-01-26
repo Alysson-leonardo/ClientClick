@@ -1,5 +1,11 @@
 import express from "express";
 import cors from "cors";
+import {
+  CreateUserClient,
+  CreateUserProvider,
+  SearchUserClient,
+  SearchUserProvider,
+} from "./prismaServices.js";
 
 const server = express();
 const port = 8080;
@@ -15,7 +21,12 @@ server.post("/cadastroCliente", (req, resp) => {
       .status(400)
       .json({ message: "Todos os campos precisam ser preenchidos!" });
   }
-
+  try {
+    const user = CreateUserClient({ nome, nascimento, email, senha });
+    console.log(user, "print do console");
+  } catch (error) {
+    console.log(error);
+  }
   console.log("Dados recebidos: ", { nome, nascimento, email, senha });
 
   resp.status(201).json({ message: "cadastro realizado com sucesso!" });
