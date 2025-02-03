@@ -14,3 +14,14 @@ model cliente {
   email      String   @unique(map: "email_UNIQUE") @db.VarChar(45)
   senha      Int
 }
+
+model prestador {
+  id_prestador         Int      @id @unique(map: "id_prestador_UNIQUE") @default(autoincrement())
+  nome_prestador       String   @db.VarChar(45)
+  nascimento_prestador DateTime @db.Date
+  profissao_prestador  String   @db.VarChar(45)
+  cidade_prestador     String   @db.VarChar(45)
+  email_prestador      String   @unique(map: "email_prestador_UNIQUE") @db.VarChar(45)
+  senha_prestador      Int
+
+}

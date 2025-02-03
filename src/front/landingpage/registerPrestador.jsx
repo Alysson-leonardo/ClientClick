@@ -8,6 +8,7 @@ function RegisterPrestador() {
   const [nome, setNome] = useState("");
   const [dataNasc, setDataNasc] = useState();
   const [profissao, setProfissao] = useState("");
+  const [cidade, setCidade] = useState("");
   const [email, setEmail] = useState("");
 
   const [senha, setSenha] = useState("");
@@ -60,6 +61,7 @@ function RegisterPrestador() {
               nome,
               dataNasc,
               profissao,
+              cidade,
               email,
               senha,
               senhaCofirm,
@@ -72,6 +74,7 @@ function RegisterPrestador() {
           setNome("");
           setDataNasc("");
           setProfissao("");
+          setCidade("");
           setEmail("");
           setSenha("");
           setSenhaCofirm("");
@@ -141,6 +144,24 @@ function RegisterPrestador() {
           <option value="mecanico">mecanico</option>
           <option value="motoboy">motoboy</option>
           <option value="faxineira">faxineira</option>
+        </select>
+        <label htmlFor="cidadeName">Profissão</label>
+        <select
+          name="cidadeName"
+          id="Icidadae"
+          value={cidade}
+          onChange={(e) => setCidade(e.target.value)}
+          required
+        >
+          <option value="">Cidade</option>
+          <option value="Paranoa">Paranoa</option>
+          <option value="Itapoa">Itapoã</option>
+          <option value="brasilia">brasilia</option>
+          <option value="estrutural">estrutural</option>
+          <option value="bandeirante">bandeirante</option>
+          <option value="brazlandia">brazlandia</option>
+          <option value="sobradinho_2">sobradinho 2</option>
+          <option value="Sao_sebastiao">São sebastião</option>
         </select>
         <label htmlFor="Iemail">Email</label>
         <input

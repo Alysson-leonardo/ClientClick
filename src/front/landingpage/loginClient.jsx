@@ -1,7 +1,8 @@
 import style from "./loginClient.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 function LoginClient() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mensagem, setMensagem] = useState("");
@@ -21,7 +22,18 @@ function LoginClient() {
 
       const dados = await response.json();
       if (response.ok) {
+        // fazer um fecth para a rota privada do cliente
         setMensagem(dados.message);
+        const DadosUsuario = [
+          dados.token,
+          dados.userEmail,
+          dados.nome,
+          dados.nascimento,
+        ];
+        localStorage.setItem("user", JSON.stringify(DadosUsuario));
+        setTimeout(() => {
+          navigate("/page-cliente");
+        }, 1000);
       } else {
         setMensagem(dados.message);
       }

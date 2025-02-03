@@ -4,78 +4,43 @@ import { useState } from "react";
 import styles from "./feedClientPage.module.css";
 // componentes
 import CardUser from "../../../componentes/cardUser";
+import { useEffect } from "react";
+import { allProviders } from "../../../backend/prismaServices";
 
 function FeedUsers() {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      nome: "joao",
-      profissao: "eletricista",
-      avaliacao: 4,
-      num_servicos_feitos: 10,
-      proximidade: 10,
-    },
-    {
-      id: 2,
-      nome: "maria",
-      profissao: "programadora",
-      avaliacao: 3,
-      num_servicos_feitos: 14,
-      proximidade: 15,
-    },
-    {
-      id: 3,
-      nome: "cleber",
-      profissao: "apresentador",
-      avaliacao: 4,
-      num_servicos_feitos: 4,
-      proximidade: 11,
-    },
-    {
-      id: 4,
-      nome: "joana",
-      profissao: "açougueira",
-      avaliacao: 3,
-      num_servicos_feitos: 20,
-      proximidade: 10,
-    },
-    {
-      id: 5,
-      nome: "dudu",
-      profissao: "pamonheiro",
-      avaliacao: 10,
-      num_servicos_feitos: 100,
-      proximidade: 2,
-    },
-    {
-      id: 6,
-      nome: "duda",
-      profissao: "piao",
-      avaliacao: 10,
-      num_servicos_feitos: 100,
-      proximidade: 2,
-    },
-    {
-      id: 7,
-      nome: "chuchu",
-      profissao: "CEO",
-      avaliacao: 10,
-      num_servicos_feitos: 100,
-      proximidade: 2,
-    },
-  ]);
+  const [providers, setProviders] = useState([]);
+  useEffect(() => {
+    const getAllProviders = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/getProviders", {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          console.log("erro ao buscar!");
+        }
+        const allproviders = await response.json();
+        console.log(allproviders);
+        setProviders(allproviders);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getAllProviders();
+  }, []);
+
   return (
     <div className={styles.userDiv}>
       <h1>Prestadores de serviços</h1>
-      {users.map((user) => (
+      {providers.map((provider) => (
         <CardUser
-          id={user.id}
-          key={user.id}
-          nome={user.nome}
-          profissao={user.profissao}
-          avaliacao={user.avaliacao}
-          num_servicos_feitos={user.num_servicos_feitos}
-          proximidade={user.proximidade}
+          id={provider.id_prestador}
+          key={provider.id_prestador}
+          nome={provider.nome_prestador}
+          profissao={provider.profissao_prestador}
+          cidade={provider.cidade_prestador}
         ></CardUser>
       ))}
     </div>

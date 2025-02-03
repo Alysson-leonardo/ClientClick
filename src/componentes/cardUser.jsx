@@ -7,7 +7,7 @@ function CardUser({
   valor_maximo,
   avaliacao,
   num_servicos_feitos,
-  proximidade,
+  cidade,
 }) {
   return (
     <div id={id} className={styles.card}>
@@ -21,7 +21,7 @@ function CardUser({
         <p>{avaliacao}</p>
         <p>{valor_maximo}</p>
         <p>{num_servicos_feitos}</p>
-        <p>{proximidade}</p>
+        <p>{cidade}</p>
       </div>
     </div>
   );

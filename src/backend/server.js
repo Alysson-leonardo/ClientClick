@@ -5,6 +5,7 @@ import {
   CreateUserProvider,
   SearchUserClient,
   SearchUserProvider,
+  allProviders,
 } from "./prismaServices.js";
 
 const server = express();
@@ -21,11 +22,17 @@ server.post("/cadastroCliente", (req, resp) => {
       .status(400)
       .json({ message: "Todos os campos precisam ser preenchidos!" });
   }
+  const dataNasc = new Date(nascimento);
+  const senhaUsuario = parseInt(senha);
   try {
-    const user = CreateUserClient({ nome, nascimento, email, senha });
-    console.log(user, "print do console");
+    const user = CreateUserClient({
+      nome,
+      nascimento: dataNasc,
+      email,
+      senha: senhaUsuario,
+    });
   } catch (error) {
-    console.log(error);
+    return console.log(error);
   }
   console.log("Dados recebidos: ", { nome, nascimento, email, senha });
 
@@ -39,27 +46,69 @@ server.post("/loginCliente", (req, resp) => {
       .status(400)
       .json({ message: "Todos os campos precisam ser preenchidos" });
   }
+  try {
+    SearchUserClient(email).then((user) => {
+      if (!user) {
+        return resp.status(404).json({ message: "usuario não encontrado!" });
+      }
+
+      const senhaUser = parseInt(user["senha"]);
+      const senhaFront = parseInt(senha);
+
+      if (senhaFront != senhaUser) {
+        return resp.status(404).json({ message: "Senha INCORRETA!" });
+      }
+      return resp.status(201).json({
+        userEmail: user["email"],
+        nome: user["nome"],
+        nascimento: user["nascimento"],
+        message: "Login feito com sucesso!",
+      });
+    });
+  } catch (error) {
+    return console.log(error);
+  }
   console.log("Dados recebidos: ", { email, senha });
-  resp.status(201).json({ message: "Login feito com sucesso!" });
 });
 
 //Rotas Prestador
 //cadastro
 server.post("/cadastroPrestador", (req, resp) => {
-  const { nome, dataNasc, profissao, email, senha } = req.body;
-  if (!nome || !dataNasc || !profissao || !email || !senha) {
+  const { nome, dataNasc, profissao, cidade, email, senha } = req.body;
+  if (!nome || !dataNasc || !profissao || !email || !senha || !cidade) {
     return resp
       .status(400)
       .json({ message: "Todos os dados precisam ser preenchidos!" });
+  }
+  const nascimentoUsuario = new Date(dataNasc);
+  const senhaUsuario = parseInt(senha);
+  try {
+    CreateUserProvider({
+      nome: nome,
+      nascimento: nascimentoUsuario,
+      profissao: profissao,
+      cidade: cidade,
+      email: email,
+      senha: senhaUsuario,
+    })
+      .then((dados) => {
+        console.log(dados, "dados enviados!");
+      })
+      .catch((err) => {
+        return console.log(err);
+      });
+  } catch (error) {
+    console.log(error);
   }
   console.log("Dados recebidos: ", {
     nome,
     dataNasc,
     profissao,
+    cidade,
     email,
     senha,
   });
-  resp.status(201).json({ message: "Cadastro realizado com sucesso!" });
+  return resp.status(201).json({ message: "Cadastro realizado com sucesso!" });
 });
 //login
 server.post("/loginPrestador", (req, resp) => {
@@ -72,4 +121,29 @@ server.post("/loginPrestador", (req, resp) => {
   console.log("Dados recebidos: ", { email, senha });
   resp.status(201).json({ message: "Logado" });
 });
+
+//getProviders
+server.get("/getProviders", (req, resp) => {
+  try {
+    allProviders(10)
+      .then((providers) => {
+        if (!providers) {
+          return resp
+            .status(404)
+            .json({ error: "erro ao tentar pegar os dados!" });
+        }
+        console.log(providers);
+        console.log(typeof providers);
+        return resp.status(200).json({
+          providers,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 server.listen(port, () => console.log(`Server rodando na porta ${port}`));
