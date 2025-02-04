@@ -10,16 +10,19 @@ export async function SearchUserClient(email) {
   return await prisma.cliente.findUnique({ where: { email: email } });
 }
 export async function SearchUserProvider(email) {
-  return await prisma.prestador.findUnique({ where: { email: email } });
+  return await prisma.prestador.findUnique({
+    where: { email_prestador: email },
+  });
 }
 // redenrização dos prestadores
 export async function allProviders(filters) {
-  console.log(filters, "prisma service");
-  if (
-    (filters.cidade === "todas" && filters.profissao === "todas") ||
-    (filters.cidade === "todas" && filters.profissao === "") ||
-    (filters.cidade === "" && filters.profissao === "todas")
-  ) {
+  console.log(
+    typeof filters.profissao,
+    typeof filters.cidade,
+    "prisma service"
+  );
+
+  if (filters.cidade == "" && filters.profissao == "") {
     return await prisma.prestador.findMany({
       select: {
         id_prestador: true,

@@ -27,12 +27,13 @@ function UserPage({ isDesktop }) {
         <p>configurações</p>
         <p>acessibilidade</p>
       </div>
-      <hr />
+
       <div
         className={
           isDesktop ? styles.buttonUserDesktop : styles.buttonUserMobile
         }
       >
+        <hr />
         <button>
           <Link to="/pagina-cliente/feed">Feed</Link>
         </button>

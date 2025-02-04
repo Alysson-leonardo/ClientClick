@@ -70,11 +70,12 @@ function RegisterClient() {
             navigate("/loginClient");
           }, 2000);
         } else {
+          alert(dados.error);
           setMensagem(dados.message);
         }
       } catch (error) {
         console.error("Erro ao enviar os dados:", error);
-        setMensagem("erro aoa cadastrar. Tente novamente.");
+        setMensagem("erro ao cadastrar. Tente novamente.");
       }
     } else {
       setMensagem("As senhas não coincidem.");

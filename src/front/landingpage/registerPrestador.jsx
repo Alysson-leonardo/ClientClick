@@ -82,7 +82,7 @@ function RegisterPrestador() {
             navigate("/loginProvider");
           }, 2000);
         } else {
-          setMensagem(dados.message);
+          alert(dados.error);
         }
       } catch (error) {
         setMensagem("Erro ao enviar os dados!", error);

@@ -8,8 +8,8 @@ import { useEffect } from "react";
 
 function FeedUsers() {
   const [providers, setProviders] = useState([]);
-  const [cidadeFilter, setCidadeFilter] = useState("todas");
-  const [profissaoFilter, setProfissaoFilter] = useState("todas");
+  const [cidadeFilter, setCidadeFilter] = useState("");
+  const [profissaoFilter, setProfissaoFilter] = useState("");
   const [cidadeOpcao, setCidadeOpcao] = useState("");
   const [profissaoOpcao, setProfissaoOpcao] = useState("");
 
@@ -17,15 +17,8 @@ function FeedUsers() {
     e.preventDefault();
     setCidadeFilter(cidadeOpcao);
     setProfissaoFilter(profissaoOpcao);
-    setTimeout(() => {
-      console.log(cidadeFilter);
-      console.log(profissaoFilter);
-    }, 5000);
   };
   useEffect(() => {
-    if (!cidadeFilter && !profissaoFilter) {
-      return;
-    }
     const getAllProviders = async () => {
       try {
         const response = await fetch("http://localhost:8080/getProviders", {
@@ -65,8 +58,7 @@ function FeedUsers() {
               onChange={(e) => setProfissaoOpcao(e.target.value)}
               value={profissaoOpcao}
             >
-              <option value="">sem filtro</option>
-              <option value="todas">todas</option>
+              <option value={""}>todas</option>
               <option value="Cabeleireira">Cabeleireira</option>
               <option value="Eletricista">eletricista</option>
               <option value="Encanadora">Encanadora</option>
@@ -82,8 +74,7 @@ function FeedUsers() {
               onChange={(e) => setCidadeOpcao(e.target.value)}
               value={cidadeOpcao}
             >
-              <option value="">sem filtro</option>
-              <option value="todas">todas</option>
+              <option value={""}>todas</option>
               <option value="paranoa">paranoa</option>
               <option value="itapoa">itapoa</option>
               <option value="estrutural">estrutural</option>

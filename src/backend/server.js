@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import cors from "cors";
 import {
   CreateUserClient,
@@ -22,21 +22,38 @@ server.post("/cadastroCliente", (req, resp) => {
       .status(400)
       .json({ message: "Todos os campos precisam ser preenchidos!" });
   }
-  const dataNasc = new Date(nascimento);
-  const senhaUsuario = parseInt(senha);
   try {
-    const user = CreateUserClient({
-      nome,
-      nascimento: dataNasc,
-      email,
-      senha: senhaUsuario,
+    SearchUserClient(email).then((dados) => {
+      if (!dados) {
+        const dataNasc = new Date(nascimento);
+        const senhaUsuario = parseInt(senha);
+        try {
+          CreateUserClient({
+            nome,
+            nascimento: dataNasc,
+            email,
+            senha: senhaUsuario,
+          })
+            .then((dados) => {
+              console.log(dados);
+              return resp
+                .status(201)
+                .json({ message: "Cadastro realizado com sucesso!" });
+            })
+            .catch((error) => {
+              console.log(error);
+              return resp.status(404).json({ error: "erro ao cadastrar" });
+            });
+        } catch (error) {
+          return resp.status(404).json({ error: "erro ao tentar cadastrar" });
+        }
+      } else {
+        return resp.status(404).json({ error: "O usuario já existe" });
+      }
     });
   } catch (error) {
-    return console.log(error);
+    console.log(error);
   }
-  console.log("Dados recebidos: ", { nome, nascimento, email, senha });
-
-  resp.status(201).json({ message: "cadastro realizado com sucesso!" });
 });
 //Login
 server.post("/loginCliente", (req, resp) => {
@@ -49,7 +66,7 @@ server.post("/loginCliente", (req, resp) => {
   try {
     SearchUserClient(email).then((user) => {
       if (!user) {
-        return resp.status(404).json({ message: "usuario não encontrado!" });
+        return resp.status(404).json({ message: "usuario não cadastrado!" });
       }
 
       const senhaUser = parseInt(user["senha"]);
@@ -80,26 +97,41 @@ server.post("/cadastroPrestador", (req, resp) => {
       .status(400)
       .json({ message: "Todos os dados precisam ser preenchidos!" });
   }
-  const nascimentoUsuario = new Date(dataNasc);
-  const senhaUsuario = parseInt(senha);
   try {
-    CreateUserProvider({
-      nome: nome,
-      nascimento: nascimentoUsuario,
-      profissao: profissao,
-      cidade: cidade,
-      email: email,
-      senha: senhaUsuario,
-    })
-      .then((dados) => {
-        console.log(dados, "dados enviados!");
-      })
-      .catch((err) => {
-        return console.log(err);
-      });
+    SearchUserProvider(email).then((dados) => {
+      if (!dados) {
+        const nascimentoUsuario = new Date(dataNasc);
+        const senhaUsuario = parseInt(senha);
+        try {
+          CreateUserProvider({
+            nome_prestador: nome,
+            nascimento_prestador: nascimentoUsuario,
+            profissao_prestador: profissao,
+            cidade_prestador: cidade,
+            email_prestador: email,
+            senha_prestador: senhaUsuario,
+          })
+            .then((dados) => {
+              console.log(dados);
+              return resp
+                .status(201)
+                .json({ message: "Cadastro realizado com sucesso!" });
+            })
+            .catch((error) => {
+              console.log(error);
+              return resp.status(404).json({ error: "erro ao cadastrar" });
+            });
+        } catch (error) {
+          return resp.status(404).json({ error: "erro ao tentar cadastrar" });
+        }
+      } else {
+        return resp.status(404).json({ error: "O usuario já existe" });
+      }
+    });
   } catch (error) {
     console.log(error);
   }
+
   console.log("Dados recebidos: ", {
     nome,
     dataNasc,
@@ -108,7 +140,6 @@ server.post("/cadastroPrestador", (req, resp) => {
     email,
     senha,
   });
-  return resp.status(201).json({ message: "Cadastro realizado com sucesso!" });
 });
 //login
 server.post("/loginPrestador", (req, resp) => {
@@ -118,14 +149,37 @@ server.post("/loginPrestador", (req, resp) => {
       .status(400)
       .json({ message: "Todos os campos precisam ser preenchidos" });
   }
+  try {
+    SearchUserProvider(email).then((user) => {
+      if (!user) {
+        return resp.status(404).json({ message: "usuario não cadastrado!" });
+      }
+
+      const senhaUser = parseInt(user["senha_prestador"]);
+      const senhaFront = parseInt(senha);
+
+      if (senhaFront != senhaUser) {
+        return resp.status(404).json({ message: "Senha INCORRETA!" });
+      }
+      return resp.status(201).json({
+        userEmail: user["email_prestador"],
+        nome: user["nome_prestador"],
+        nascimento: user["nascimento_prestador"],
+        profissao: user["profissao_prestador"],
+        cidade: user["cidade_prestador"],
+        message: "Login feito com sucesso!",
+      });
+    });
+  } catch (error) {
+    return console.log(error);
+  }
   console.log("Dados recebidos: ", { email, senha });
-  resp.status(201).json({ message: "Logado" });
 });
 
-//getProviders
+//Listar os prestadores
 server.post("/getProviders", (req, resp) => {
   const { cidade, profissao } = req.body;
-  console.log(cidade, profissao, "backend");
+  console.log(typeof cidade, cidade, typeof profissao, profissao, "backend");
   try {
     allProviders({ cidade: cidade, profissao: profissao })
       .then((providers) => {

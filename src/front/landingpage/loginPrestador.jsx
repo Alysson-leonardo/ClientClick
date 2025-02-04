@@ -20,6 +20,17 @@ function LoginPrestador() {
         setMensagem(dados.message);
         setEmail("");
         setSenha("");
+        const DadosUsuario = [
+          dados.userEmail,
+          dados.nome,
+          dados.nascimento,
+          dados.profissao,
+          dados.cidade,
+        ];
+        localStorage.setItem("user", JSON.stringify(DadosUsuario));
+        setTimeout(() => {
+          navigate("/page-cliente");
+        }, 1000);
       } else {
         setMensagem(dados.message);
       }

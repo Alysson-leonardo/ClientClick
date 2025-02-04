@@ -22,7 +22,6 @@ function LoginClient() {
 
       const dados = await response.json();
       if (response.ok) {
-        // fazer um fecth para a rota privada do cliente
         setMensagem(dados.message);
         const DadosUsuario = [
           dados.token,
