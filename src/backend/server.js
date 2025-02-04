@@ -123,23 +123,24 @@ server.post("/loginPrestador", (req, resp) => {
 });
 
 //getProviders
-server.get("/getProviders", (req, resp) => {
+server.post("/getProviders", (req, resp) => {
+  const { cidade, profissao } = req.body;
+  console.log(cidade, profissao, "backend");
   try {
-    allProviders(10)
+    allProviders({ cidade: cidade, profissao: profissao })
       .then((providers) => {
-        if (!providers) {
+        if (!providers || providers.length === 0) {
           return resp
             .status(404)
-            .json({ error: "erro ao tentar pegar os dados!" });
+            .json({ error: "Nenhum provedor encontrado!" });
         }
-        console.log(providers);
-        console.log(typeof providers);
         return resp.status(200).json({
-          providers,
+          respProviders: providers,
         });
       })
       .catch((error) => {
-        console.log(error);
+        console.log("erro no servidor", error);
+        return resp.status(500).json({ error: "erro interno no servidor" });
       });
   } catch (error) {
     console.log(error);

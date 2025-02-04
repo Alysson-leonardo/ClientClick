@@ -13,14 +13,40 @@ export async function SearchUserProvider(email) {
   return await prisma.prestador.findUnique({ where: { email: email } });
 }
 // redenrização dos prestadores
-export async function allProviders(qtde) {
+export async function allProviders(filters) {
+  console.log(filters, "prisma service");
+  if (
+    (filters.cidade === "todas" && filters.profissao === "todas") ||
+    (filters.cidade === "todas" && filters.profissao === "") ||
+    (filters.cidade === "" && filters.profissao === "todas")
+  ) {
+    return await prisma.prestador.findMany({
+      select: {
+        id_prestador: true,
+        nome_prestador: true,
+        profissao_prestador: true,
+        cidade_prestador: true,
+      },
+      take: 10,
+    });
+  }
   return await prisma.prestador.findMany({
+    where: {
+      ...(filters.cidade && {
+        cidade_prestador: { contains: filters.cidade },
+      }),
+      ...(filters.profissao && {
+        profissao_prestador: {
+          contains: filters.profissao,
+        },
+      }),
+    },
     select: {
       id_prestador: true,
       nome_prestador: true,
       profissao_prestador: true,
       cidade_prestador: true,
     },
-    take: qtde,
+    take: 10,
   });
 }
