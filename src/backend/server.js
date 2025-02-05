@@ -26,13 +26,13 @@ server.post("/cadastroCliente", (req, resp) => {
     SearchUserClient(email).then((dados) => {
       if (!dados) {
         const dataNasc = new Date(nascimento);
-        const senhaUsuario = parseInt(senha);
+        // criptografia da senha
         try {
           CreateUserClient({
             nome,
             nascimento: dataNasc,
             email,
-            senha: senhaUsuario,
+            senha: senha,
           })
             .then((dados) => {
               console.log(dados);
@@ -68,11 +68,8 @@ server.post("/loginCliente", (req, resp) => {
       if (!user) {
         return resp.status(404).json({ message: "usuario não cadastrado!" });
       }
-
-      const senhaUser = parseInt(user["senha"]);
-      const senhaFront = parseInt(senha);
-
-      if (senhaFront != senhaUser) {
+      //comparação das senhas/hash
+      if (senha != user["senha"]) {
         return resp.status(404).json({ message: "Senha INCORRETA!" });
       }
       return resp.status(201).json({
@@ -101,7 +98,7 @@ server.post("/cadastroPrestador", (req, resp) => {
     SearchUserProvider(email).then((dados) => {
       if (!dados) {
         const nascimentoUsuario = new Date(dataNasc);
-        const senhaUsuario = parseInt(senha);
+        // criptografia
         try {
           CreateUserProvider({
             nome_prestador: nome,
@@ -109,7 +106,7 @@ server.post("/cadastroPrestador", (req, resp) => {
             profissao_prestador: profissao,
             cidade_prestador: cidade,
             email_prestador: email,
-            senha_prestador: senhaUsuario,
+            senha_prestador: senha,
           })
             .then((dados) => {
               console.log(dados);
@@ -154,11 +151,9 @@ server.post("/loginPrestador", (req, resp) => {
       if (!user) {
         return resp.status(404).json({ message: "usuario não cadastrado!" });
       }
-
-      const senhaUser = parseInt(user["senha_prestador"]);
-      const senhaFront = parseInt(senha);
-
-      if (senhaFront != senhaUser) {
+      console.log(typeof senha);
+      console.log(typeof user["senha_prestador"]);
+      if (senha != user["senha_prestador"]) {
         return resp.status(404).json({ message: "Senha INCORRETA!" });
       }
       return resp.status(201).json({
