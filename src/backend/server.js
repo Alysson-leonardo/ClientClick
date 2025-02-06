@@ -7,12 +7,14 @@ import {
   SearchUserProvider,
   allProviders,
 } from "./prismaServices.js";
+import bcrypt from "bcryptjs";
 
 const server = express();
 const port = 8080;
 
 server.use(cors());
 server.use(express.json());
+
 // Rotas Cliente
 //cadastro
 server.post("/cadastroCliente", (req, resp) => {
@@ -22,17 +24,20 @@ server.post("/cadastroCliente", (req, resp) => {
       .status(400)
       .json({ message: "Todos os campos precisam ser preenchidos!" });
   }
+  console.log(senha);
   try {
     SearchUserClient(email).then((dados) => {
       if (!dados) {
         const dataNasc = new Date(nascimento);
-        // criptografia da senha
+
+        const senhaHash = bcrypt.hashSync(senha, 8);
+
         try {
           CreateUserClient({
             nome,
             nascimento: dataNasc,
             email,
-            senha: senha,
+            senha: senhaHash,
           })
             .then((dados) => {
               console.log(dados);
@@ -63,13 +68,14 @@ server.post("/loginCliente", (req, resp) => {
       .status(400)
       .json({ message: "Todos os campos precisam ser preenchidos" });
   }
+  console.log(senha);
   try {
     SearchUserClient(email).then((user) => {
       if (!user) {
         return resp.status(404).json({ message: "usuario não cadastrado!" });
       }
-      //comparação das senhas/hash
-      if (senha != user["senha"]) {
+      const correctPassword = bcrypt.compareSync(senha, user["senha"]);
+      if (!correctPassword) {
         return resp.status(404).json({ message: "Senha INCORRETA!" });
       }
       return resp.status(201).json({
@@ -94,11 +100,12 @@ server.post("/cadastroPrestador", (req, resp) => {
       .status(400)
       .json({ message: "Todos os dados precisam ser preenchidos!" });
   }
+  console.log(senha);
   try {
     SearchUserProvider(email).then((dados) => {
       if (!dados) {
         const nascimentoUsuario = new Date(dataNasc);
-        // criptografia
+        const senhaHash = bcrypt.hashSync(senha, 10);
         try {
           CreateUserProvider({
             nome_prestador: nome,
@@ -106,7 +113,7 @@ server.post("/cadastroPrestador", (req, resp) => {
             profissao_prestador: profissao,
             cidade_prestador: cidade,
             email_prestador: email,
-            senha_prestador: senha,
+            senha_prestador: senhaHash,
           })
             .then((dados) => {
               console.log(dados);
@@ -146,14 +153,17 @@ server.post("/loginPrestador", (req, resp) => {
       .status(400)
       .json({ message: "Todos os campos precisam ser preenchidos" });
   }
+  console.log(senha);
   try {
     SearchUserProvider(email).then((user) => {
       if (!user) {
         return resp.status(404).json({ message: "usuario não cadastrado!" });
       }
-      console.log(typeof senha);
-      console.log(typeof user["senha_prestador"]);
-      if (senha != user["senha_prestador"]) {
+      const correctPassword = bcrypt.compareSync(
+        senha,
+        user["senha_prestador"]
+      );
+      if (!correctPassword) {
         return resp.status(404).json({ message: "Senha INCORRETA!" });
       }
       return resp.status(201).json({
