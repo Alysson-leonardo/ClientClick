@@ -12,7 +12,14 @@ import bcrypt from "bcryptjs";
 const server = express();
 const port = 8080;
 
-server.use(cors());
+server.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 server.use(express.json());
 
 // Rotas Cliente
@@ -205,5 +212,8 @@ server.post("/getProviders", (req, resp) => {
     console.log(error);
   }
 });
+
+// rota privada usuario cliente
+server.get("/page-cliente", (req, resp) => {});
 
 server.listen(port, () => console.log(`Server rodando na porta ${port}`));
