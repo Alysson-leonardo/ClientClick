@@ -8,6 +8,9 @@ import {
   allProviders,
 } from "./prismaServices.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import "dotenv/config";
+import cookieParser from "cookie-parser";
 
 const server = express();
 const port = 8080;
@@ -21,6 +24,7 @@ server.use(
   })
 );
 server.use(express.json());
+server.use(cookieParser());
 
 // Rotas Cliente
 //cadastro
@@ -33,7 +37,7 @@ server.post("/cadastroCliente", (req, resp) => {
   }
   console.log(senha);
   try {
-    SearchUserClient(email).then((dados) => {
+    SearchUserClient("email", email).then((dados) => {
       if (!dados) {
         const dataNasc = new Date(nascimento);
 
@@ -77,7 +81,7 @@ server.post("/loginCliente", (req, resp) => {
   }
   console.log(senha);
   try {
-    SearchUserClient(email).then((user) => {
+    SearchUserClient("email", email).then((user) => {
       if (!user) {
         return resp.status(404).json({ message: "usuario não cadastrado!" });
       }
@@ -85,15 +89,28 @@ server.post("/loginCliente", (req, resp) => {
       if (!correctPassword) {
         return resp.status(404).json({ message: "Senha INCORRETA!" });
       }
-      return resp.status(201).json({
-        userEmail: user["email"],
-        nome: user["nome"],
-        nascimento: user["nascimento"],
-        message: "Login feito com sucesso!",
-      });
+      try {
+        const secret = process.env.SECRET;
+        const idUsuario = String(user["id_cliente"]);
+        const token = jwt.sign({ id: idUsuario }, secret, { expiresIn: "1h" });
+        resp.cookie("token", token, {
+          httpOnly: true,
+          secure: false,
+          maxAge: 3600000,
+          path: "/",
+        });
+        console.log("cookie definido:", resp.getHeaders()["set-cookie"]);
+        return resp.status(200).json({ id: user["id_cliente"], ok: true });
+      } catch (error) {
+        return resp
+          .status(500)
+          .json({ message: "erro ao tentar criar o token" });
+      }
     });
   } catch (error) {
-    return console.log(error);
+    return resp
+      .status(404)
+      .json({ message: "erro ao tentar encontrar o usuario", error });
   }
   console.log("Dados recebidos: ", { email, senha });
 });
@@ -109,7 +126,7 @@ server.post("/cadastroPrestador", (req, resp) => {
   }
   console.log(senha);
   try {
-    SearchUserProvider(email).then((dados) => {
+    SearchUserProvider("email", email).then((dados) => {
       if (!dados) {
         const nascimentoUsuario = new Date(dataNasc);
         const senhaHash = bcrypt.hashSync(senha, 10);
@@ -162,7 +179,7 @@ server.post("/loginPrestador", (req, resp) => {
   }
   console.log(senha);
   try {
-    SearchUserProvider(email).then((user) => {
+    SearchUserProvider("email", email).then((user) => {
       if (!user) {
         return resp.status(404).json({ message: "usuario não cadastrado!" });
       }
@@ -189,8 +206,8 @@ server.post("/loginPrestador", (req, resp) => {
 });
 
 //Listar os prestadores
-server.post("/getProviders", (req, resp) => {
-  const { cidade, profissao } = req.body;
+server.get("/getProviders", (req, resp) => {
+  const { cidade, profissao } = req.query;
   console.log(typeof cidade, cidade, typeof profissao, profissao, "backend");
   try {
     allProviders({ cidade: cidade, profissao: profissao })
@@ -213,7 +230,51 @@ server.post("/getProviders", (req, resp) => {
   }
 });
 
+function tokenVerify(req, resp, next) {
+  const token = req.cookies.token;
+  console.log(token, " token do middleware");
+  if (!token) {
+    return resp.status(401).json({ message: "acesso negado!" });
+  }
+  try {
+    const secret = process.env.SECRET;
+    req.userId = jwt.verify(token, secret);
+    next();
+  } catch (error) {
+    return resp.status(403).json({ message: "" });
+  }
+}
 // rota privada usuario cliente
-server.get("/page-cliente", (req, resp) => {});
+server.get("/auth/:id", tokenVerify, (req, resp) => {
+  console.log("rota do auth");
+  const idUser = parseInt(req.userId.id);
+  try {
+    SearchUserClient("id_cliente", idUser)
+      .then((user) => {
+        try {
+          if (!user) {
+            return resp
+              .status(404)
+              .json({ message: "usuario não encontra(auth)" });
+          }
+          return resp.status(200).json({
+            id: user["id_cliente"],
+            nome: user.nome,
+            nascimento: user.nascimento,
+            message: "ok",
+            ok: true,
+          });
+        } catch (error) {
+          console.log(error, "erro ao buscar usuario");
+          return resp.status(404).json({ message: "invalido" });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } catch (error) {
+    return console.log(error);
+  }
+});
 
 server.listen(port, () => console.log(`Server rodando na porta ${port}`));

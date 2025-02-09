@@ -21,16 +21,15 @@ function FeedUsers() {
   useEffect(() => {
     const getAllProviders = async () => {
       try {
-        const response = await fetch("http://localhost:8080/getProviders", {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({
-            cidade: cidadeFilter,
-            profissao: profissaoFilter,
-          }),
-        });
+        const response = await fetch(
+          `http://localhost:8080/getProviders?cidade=${cidadeFilter}&profissao=${profissaoFilter}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+            },
+          }
+        );
 
         const allprovidersObj = await response.json();
         if (!response.ok) {

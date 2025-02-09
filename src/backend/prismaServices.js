@@ -6,12 +6,14 @@ export async function CreateUserClient(data) {
 export async function CreateUserProvider(data) {
   return await prisma.prestador.create({ data });
 }
-export async function SearchUserClient(email) {
-  return await prisma.cliente.findUnique({ where: { email: email } });
+export async function SearchUserClient(coluna, valor) {
+  return await prisma.cliente.findUnique({
+    where: { [coluna]: valor },
+  });
 }
-export async function SearchUserProvider(email) {
+export async function SearchUserProvider(coluna, valor) {
   return await prisma.prestador.findUnique({
-    where: { email_prestador: email },
+    where: { [coluna]: valor },
   });
 }
 // redenrização dos prestadores

@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 // rotas landingpage
 import { useState, useEffect } from "react";
 function App() {
+  const id = 11;
   const [isDesktop, setisDesktop] = useState(window.innerWidth >= 768);
 
   useEffect(() => {
@@ -21,6 +22,7 @@ function App() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
   return (
     <Router>
       <div className="container">
@@ -35,7 +37,7 @@ function App() {
             <Route path="/registerProvider"></Route>
           </Route>
           <Route
-            path="/page-cliente/*"
+            path={`/page-cliente/:${id}?/*`}
             element={<PaginaCliente isDesktop={isDesktop} />}
           />
           <Route

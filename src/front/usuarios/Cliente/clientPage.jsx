@@ -4,17 +4,19 @@ import FeedUsers from "./feedClientPage";
 import ChatPage from "./chatPage";
 import FeedChat from "./feed&chat";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 function PaginaCliente({ isDesktop }) {
+  const userDados = JSON.parse(localStorage.getItem("user"));
   return (
     <div className={style.container}>
-      <UserPage isDesktop={isDesktop} />
+      <UserPage isDesktop={isDesktop} dados={userDados} />
       <div className={style.subcontainer}>
         <Routes>
           {isDesktop ? (
             <>
               <Route path="/" element={<FeedChat></FeedChat>}></Route>
               <Route
-                path="configuracoes"
+                path="/configuracoes"
                 element={<ChatPage></ChatPage>}
               ></Route>
             </>

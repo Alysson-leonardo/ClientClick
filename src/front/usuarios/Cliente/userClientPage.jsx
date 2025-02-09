@@ -1,14 +1,15 @@
 import styles from "./userClientPage.module.css";
 import { Link } from "react-router-dom";
-function UserPage({ isDesktop }) {
+function UserPage({ isDesktop, dados }) {
   return (
     <div className={isDesktop ? styles.userDivDesktop : styles.userDivMobile}>
       <div className={isDesktop ? styles.topUserDesktop : styles.topUserMobile}>
         <img src="" alt="" />
         <div>
-          <h2 className={isDesktop ? "" : styles.textMobile}>nome</h2>
+          <h2 className={isDesktop ? "" : styles.textMobile}>{dados.nome}</h2>
           <div>
-            <p>cpf</p>
+            <p>{dados.id}</p>
+            <p>{dados.nascimento.slice(0, 10)}</p>
           </div>
         </div>
       </div>
@@ -35,10 +36,10 @@ function UserPage({ isDesktop }) {
       >
         <hr />
         <button>
-          <Link to="/pagina-cliente/feed">Feed</Link>
+          <Link to={`/page-cliente/${dados.id}/feed`}>Feed</Link>
         </button>
         <button>
-          <Link to={"/pagina-cliente/chat"}>Chat</Link>
+          <Link to={`/page-cliente/${dados.id}/chat`}>Chat</Link>
         </button>
       </div>
     </div>

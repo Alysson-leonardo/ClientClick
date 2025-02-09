@@ -18,23 +18,41 @@ function LoginClient() {
           email,
           senha,
         }),
+        credentials: "include",
       });
 
       const dados = await response.json();
-      if (response.ok) {
-        setMensagem(dados.message);
-        const DadosUsuario = [
-          dados.token,
-          dados.userEmail,
-          dados.nome,
-          dados.nascimento,
-        ];
-        localStorage.setItem("user", JSON.stringify(DadosUsuario));
-        setTimeout(() => {
-          navigate("/page-cliente");
-        }, 1000);
-      } else {
-        setMensagem(dados.message);
+      if (dados.ok) {
+        try {
+          const getUser = await fetch(
+            `http://localhost:8080/auth/${dados.id}`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+          const respGetUser = await getUser.json();
+          if (respGetUser.ok) {
+            const DadosUsuario = {
+              id: respGetUser.id,
+              nome: respGetUser.nome,
+              nascimento: respGetUser.nascimento,
+            };
+            localStorage.setItem("user", JSON.stringify(DadosUsuario));
+            setTimeout(() => {
+              navigate("/page-cliente");
+            }, 1000);
+          } else {
+            setMensagem(respGetUser.message);
+            if (respGetUser.message == "acesso negado!") {
+              setTimeout(() => {
+                navigate("/");
+              }, 3000);
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     } catch (error) {
       console.error("Erro ao tenta buscar usuario", error);
