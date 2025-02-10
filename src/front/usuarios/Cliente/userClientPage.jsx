@@ -15,8 +15,7 @@ function UserPage({ isDesktop, dados }) {
       </div>
       <hr className={isDesktop ? "" : styles.hrcolor} />
       <div className={isDesktop ? styles.midUserDesktop : styles.midUserMobile}>
-        <p>Agendamentos</p>
-        <p>Contratos de serviços</p>
+        <p>Criar pedido</p>
         <p>Pedidos</p>
       </div>
       <hr />
@@ -26,7 +25,6 @@ function UserPage({ isDesktop, dados }) {
         }
       >
         <p>configurações</p>
-        <p>acessibilidade</p>
       </div>
 
       <div
@@ -36,7 +34,7 @@ function UserPage({ isDesktop, dados }) {
       >
         <hr />
         <button>
-          <Link to={`/page-cliente/${dados.id}/feed`}>Feed</Link>
+          <Link to={`/page-cliente/${dados.id}/`}>Feed</Link>
         </button>
         <button>
           <Link to={`/page-cliente/${dados.id}/chat`}>Chat</Link>

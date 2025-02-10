@@ -25,7 +25,7 @@ function LoginClient() {
       if (dados.ok) {
         try {
           const getUser = await fetch(
-            `http://localhost:8080/auth/${dados.id}`,
+            `http://localhost:8080/auth-client/${dados.id}`,
             {
               method: "GET",
               credentials: "include",
@@ -39,9 +39,10 @@ function LoginClient() {
               nascimento: respGetUser.nascimento,
             };
             localStorage.setItem("user", JSON.stringify(DadosUsuario));
+            alert(respGetUser.message);
             setTimeout(() => {
               navigate("/page-cliente");
-            }, 1000);
+            }, 3000);
           } else {
             setMensagem(respGetUser.message);
             if (respGetUser.message == "acesso negado!") {
@@ -53,6 +54,8 @@ function LoginClient() {
         } catch (error) {
           console.log(error);
         }
+      } else {
+        alert(dados.message);
       }
     } catch (error) {
       console.error("Erro ao tenta buscar usuario", error);

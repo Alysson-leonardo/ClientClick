@@ -1,24 +1,83 @@
-.userDiv {
+/*desktop*/
+.userDivDesktop {
   display: flex;
   flex-flow: column nowrap;
-  flex: 0 1 300px;
-  border: 5px solid rgba(0, 0, 0, 0.733);
-  border-left: none;
-  border-radius: 10px;
-  background-color: rgb(255, 191, 0);
+  flex: 1 1 200px;
+  background-color: rgb(142, 206, 255);
+  margin-right: 20px;
 }
 
-.topUser {
+.topUserDesktop {
   flex: auto;
+  padding: 10px 0px 0px 20px;
 }
 
-.midUser {
+.midUserDesktop {
   flex: auto;
+  padding: 10px 0px 0px 20px;
 }
-.bottomUser {
+.bottomUserDesktop {
   flex: auto;
+  padding: 10px 0px 0px 20px;
 }
+
 hr {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+/*Mobile*/
+.textMobile {
+  font-size: 90%;
+}
+.userDivMobile {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 0 80px;
+  width: 80px;
+  background-color: rgb(255, 255, 255);
+  margin-right: 10px;
+  border: 2px solid rgb(210, 210, 210);
+  border-left: 0px;
+  border-radius: 3px;
+  box-shadow: 3px 0px 40px rgba(0, 0, 0, 0.462);
+}
+.topUserMobile {
+  flex: auto;
+  flex-wrap: wrap;
+  padding: 10px 0px 0px 10px;
+  background-color: white;
+}
+.midUserMobile {
+  flex: auto;
+  text-wrap: text;
+  padding: 10px 5px 0px 5px;
+  background-color: white;
+  & p {
+    font-size: 70%;
+    padding-top: 5px;
+  }
+}
+.bottomUserMobile {
+  flex: auto;
+  padding: 10px 5px 0px 5px;
+  background-color: white;
+  & p {
+    font-size: 70%;
+    padding-top: 5px;
+  }
+}
+/*BOTAO*/
+.buttonUserMobile {
+  flex: auto;
+  padding: 10px 0px 0px 10px;
+  background-color: white;
+
+  & button {
+    width: 50px;
+    padding: 5px 0px;
+    margin-top: 10px;
+  }
+}
+.buttonUserDesktop {
+  display: none;
 }

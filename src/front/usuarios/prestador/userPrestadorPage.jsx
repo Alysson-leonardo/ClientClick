@@ -1,28 +1,46 @@
 import styles from "./UserPrestadorPage.module.css";
-function UserPrestadorPage() {
+import { Link } from "react-router-dom";
+function UserPrestadorPage({ isDesktop, dados }) {
   return (
-    <div className={styles.userDiv}>
-      <div className={styles.topUser}>
+    <div className={isDesktop ? styles.userDivDesktop : styles.userDivMobile}>
+      <div className={isDesktop ? styles.topUserDesktop : styles.topUserMobile}>
         <img src="" alt="" />
         <div>
-          <h2>nome</h2>
+          <h2 className={isDesktop ? "" : styles.textMobile}>{dados.nome}</h2>
           <div>
-            <p>cpf</p>
-            <p>profissao</p>
-            <p>Avaliação</p>
+            <p>{dados.id}</p>
+            <p>{dados.nascimento.slice(0, 10)}</p>
           </div>
         </div>
       </div>
-      <div className={styles.midUser}>
-        <hr />
-        <p>Agendamentos</p>
-        <p>Contratos de serviços</p>
-        <p>serviços</p>
+      <hr className={isDesktop ? "" : styles.hrcolor} />
+      <div className={isDesktop ? styles.midUserDesktop : styles.midUserMobile}>
+        <p>{dados.profissao}</p>
+        <p>{dados.cidade}</p>
+        <p>Pedidos</p>
       </div>
-      <div className={styles.bottomUser}>
-        <hr />
+      <hr />
+      <div
+        className={
+          isDesktop ? styles.bottomUserDesktop : styles.bottomUserMobile
+        }
+      >
         <p>configurações</p>
         <p>acessibilidade</p>
+      </div>
+
+      <div
+        className={
+          isDesktop ? styles.buttonUserDesktop : styles.buttonUserMobile
+        }
+      >
+        <hr />
+        <button>
+          <Link to={`/page-prestador/${dados.id}/`}>Feed</Link>
+        </button>
+        <button>
+          <Link to={`/page-prestador/${dados.id}/chat`}>Chat</Link>
+        </button>
       </div>
     </div>
   );

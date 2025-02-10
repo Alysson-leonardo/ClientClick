@@ -3,6 +3,7 @@ import UserPage from "./userClientPage";
 import FeedUsers from "./feedClientPage";
 import ChatPage from "./chatPage";
 import FeedChat from "./feed&chat";
+import ServiceClient from "./componenteCliente/serviceClient";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 function PaginaCliente({ isDesktop }) {
@@ -16,6 +17,10 @@ function PaginaCliente({ isDesktop }) {
             <>
               <Route path="/" element={<FeedChat></FeedChat>}></Route>
               <Route
+                path="/criar-pedido"
+                element={<ServiceClient></ServiceClient>}
+              ></Route>
+              <Route
                 path="/configuracoes"
                 element={<ChatPage></ChatPage>}
               ></Route>
@@ -23,7 +28,6 @@ function PaginaCliente({ isDesktop }) {
           ) : (
             <>
               <Route path="/" element={<FeedUsers></FeedUsers>}></Route>
-              <Route path="/feed" element={<FeedUsers></FeedUsers>}></Route>
               <Route path="/chat" element={<ChatPage></ChatPage>}></Route>
             </>
           )}

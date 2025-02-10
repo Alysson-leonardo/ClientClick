@@ -77,17 +77,20 @@ server.post("/loginCliente", (req, resp) => {
   if (!email || !senha) {
     return resp
       .status(400)
-      .json({ message: "Todos os campos precisam ser preenchidos" });
+      .json({ message: "Todos os campos precisam ser preenchidos", ok: false });
   }
-  console.log(senha);
   try {
     SearchUserClient("email", email).then((user) => {
       if (!user) {
-        return resp.status(404).json({ message: "usuario não cadastrado!" });
+        return resp
+          .status(404)
+          .json({ message: "usuario não cadastrado!", ok: false });
       }
       const correctPassword = bcrypt.compareSync(senha, user["senha"]);
       if (!correctPassword) {
-        return resp.status(404).json({ message: "Senha INCORRETA!" });
+        return resp
+          .status(404)
+          .json({ message: "Senha INCORRETA!", ok: false });
       }
       try {
         const secret = process.env.SECRET;
@@ -99,18 +102,15 @@ server.post("/loginCliente", (req, resp) => {
           maxAge: 3600000,
           path: "/",
         });
-        console.log("cookie definido:", resp.getHeaders()["set-cookie"]);
-        return resp.status(200).json({ id: user["id_cliente"], ok: true });
       } catch (error) {
-        return resp
-          .status(500)
-          .json({ message: "erro ao tentar criar o token" });
+        console.log(error);
+        return resp.status(500).end();
       }
+      return resp.status(200).json({ id: user["id_cliente"], ok: true });
     });
   } catch (error) {
-    return resp
-      .status(404)
-      .json({ message: "erro ao tentar encontrar o usuario", error });
+    console.log(error);
+    return resp.status(500).end();
   }
   console.log("Dados recebidos: ", { email, senha });
 });
@@ -126,10 +126,10 @@ server.post("/cadastroPrestador", (req, resp) => {
   }
   console.log(senha);
   try {
-    SearchUserProvider("email", email).then((dados) => {
+    SearchUserProvider("email_prestador", email).then((dados) => {
       if (!dados) {
         const nascimentoUsuario = new Date(dataNasc);
-        const senhaHash = bcrypt.hashSync(senha, 10);
+        const senhaHash = bcrypt.hashSync(senha, 8);
         try {
           CreateUserProvider({
             nome_prestador: nome,
@@ -159,50 +159,49 @@ server.post("/cadastroPrestador", (req, resp) => {
   } catch (error) {
     console.log(error);
   }
-
-  console.log("Dados recebidos: ", {
-    nome,
-    dataNasc,
-    profissao,
-    cidade,
-    email,
-    senha,
-  });
 });
 //login
-server.post("/loginPrestador", (req, resp) => {
+server.post("/loginPrestador", async (req, resp) => {
   const { email, senha } = req.body;
   if (!email || !senha) {
     return resp
       .status(400)
-      .json({ message: "Todos os campos precisam ser preenchidos" });
+      .json({ message: "Todos os campos precisam ser preenchidos", ok: false });
   }
-  console.log(senha);
   try {
-    SearchUserProvider("email", email).then((user) => {
-      if (!user) {
-        return resp.status(404).json({ message: "usuario não cadastrado!" });
-      }
-      const correctPassword = bcrypt.compareSync(
-        senha,
-        user["senha_prestador"]
-      );
-      if (!correctPassword) {
-        return resp.status(404).json({ message: "Senha INCORRETA!" });
-      }
-      return resp.status(201).json({
-        userEmail: user["email_prestador"],
-        nome: user["nome_prestador"],
-        nascimento: user["nascimento_prestador"],
-        profissao: user["profissao_prestador"],
-        cidade: user["cidade_prestador"],
-        message: "Login feito com sucesso!",
+    const user = await SearchUserProvider("email_prestador", email);
+    if (!user) {
+      return resp
+        .status(404)
+        .json({ message: "usuario não cadastrado!", ok: false });
+    }
+    const correctPassword = bcrypt.compareSync(senha, user["senha_prestador"]);
+    if (!correctPassword) {
+      return resp.status(404).json({ message: "Senha INCORRETA!", ok: false });
+    }
+    try {
+      const secret = process.env.SECRET;
+      const idUsuario = String(user["id_prestador"]);
+      const token = jwt.sign({ id: idUsuario }, secret, { expiresIn: "1h" });
+      console.log(token, "token antes do cookie");
+      resp.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        maxAge: 3600000,
+        path: "/",
       });
+    } catch (error) {
+      console.log(error);
+      return resp.status(500).end();
+    }
+    return resp.status(200).json({
+      id: user["id_prestador"],
+      ok: true,
     });
   } catch (error) {
-    return console.log(error);
+    console.log(error);
+    return resp.status(500).end();
   }
-  console.log("Dados recebidos: ", { email, senha });
 });
 
 //Listar os prestadores
@@ -239,41 +238,51 @@ function tokenVerify(req, resp, next) {
   try {
     const secret = process.env.SECRET;
     req.userId = jwt.verify(token, secret);
-    next();
   } catch (error) {
-    return resp.status(403).json({ message: "" });
+    console.log(error);
+    return resp.status(403).json({ message: "token invalido", ok: false });
   }
+  next();
 }
 // rota privada usuario cliente
-server.get("/auth/:id", tokenVerify, (req, resp) => {
-  console.log("rota do auth");
+server.get("/auth-client/:id", tokenVerify, async (req, resp) => {
   const idUser = parseInt(req.userId.id);
   try {
-    SearchUserClient("id_cliente", idUser)
-      .then((user) => {
-        try {
-          if (!user) {
-            return resp
-              .status(404)
-              .json({ message: "usuario não encontra(auth)" });
-          }
-          return resp.status(200).json({
-            id: user["id_cliente"],
-            nome: user.nome,
-            nascimento: user.nascimento,
-            message: "ok",
-            ok: true,
-          });
-        } catch (error) {
-          console.log(error, "erro ao buscar usuario");
-          return resp.status(404).json({ message: "invalido" });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const user = await SearchUserClient("id_cliente", idUser);
+    if (!user) {
+      return resp.status(404).json({ message: "usuario não encontrado(auth)" });
+    }
+    return resp.status(200).json({
+      id: user["id_cliente"],
+      nome: user.nome,
+      nascimento: user.nascimento,
+      message: "login feito com sucesso!",
+      ok: true,
+    });
   } catch (error) {
-    return console.log(error);
+    console.log(error);
+    return resp.status(500).end();
+  }
+});
+server.get("/auth-provider/:id", tokenVerify, async (req, resp) => {
+  const userId = parseInt(req.userId.id);
+  console.log(userId);
+  try {
+    const user = await SearchUserProvider("id_prestador", userId);
+    if (!user) {
+      return resp.status(404).json({ message: "usuario não encontrado auth" });
+    }
+    return resp.status(200).json({
+      id: user["id_prestador"],
+      nome: user.nome_prestador,
+      nascimento: user.nascimento_prestador,
+      profissao: user.profissao_prestador,
+      cidade: user.cidade_prestador,
+      message: "login feito com sucesso!",
+      ok: true,
+    });
+  } catch (error) {
+    return resp.status(404).json({ message: "usuario não encontrado" });
   }
 });
 

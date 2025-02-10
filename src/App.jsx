@@ -41,8 +41,8 @@ function App() {
             element={<PaginaCliente isDesktop={isDesktop} />}
           />
           <Route
-            path="page-Provider"
-            element={<PaginaPrestador></PaginaPrestador>}
+            path={`page-prestador/:${id}?/*`}
+            element={<PaginaPrestador isDesktop={isDesktop}></PaginaPrestador>}
           />
         </Routes>
       </div>
