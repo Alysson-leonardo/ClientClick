@@ -55,3 +55,12 @@ export async function allProviders(filters) {
     take: 10,
   });
 }
+export async function createService(props) {
+  return await prisma.pedido.create({
+    data: {
+      nome_pedido: props.nome_pedido,
+      valor_pedido: props.valor_pedido,
+      cliente: { connect: { id_cliente: props.clienteId } },
+    },
+  });
+}

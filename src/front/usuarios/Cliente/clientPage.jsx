@@ -18,7 +18,7 @@ function PaginaCliente({ isDesktop }) {
               <Route path="/" element={<FeedChat></FeedChat>}></Route>
               <Route
                 path="/criar-pedido"
-                element={<ServiceClient></ServiceClient>}
+                element={<ServiceClient dados={userDados}></ServiceClient>}
               ></Route>
               <Route
                 path="/configuracoes"

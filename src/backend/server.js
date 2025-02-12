@@ -6,6 +6,7 @@ import {
   SearchUserClient,
   SearchUserProvider,
   allProviders,
+  createService,
 } from "./prismaServices.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -286,4 +287,22 @@ server.get("/auth-provider/:id", tokenVerify, async (req, resp) => {
   }
 });
 
+// criar pedido
+server.post("/createService", async (req, resp) => {
+  const { serviceName, valueMax, idCliente } = req.body;
+  const valueMaxFloat = parseFloat(valueMax);
+  try {
+    createService({
+      clienteId: idCliente,
+      nome_pedido: serviceName,
+      valor_pedido: valueMaxFloat,
+    });
+  } catch (error) {
+    console.log(error);
+    return resp.status(404).end();
+  }
+  return resp
+    .status(201)
+    .json({ ok: true, message: "pedido criado com sucesso!" });
+});
 server.listen(port, () => console.log(`Server rodando na porta ${port}`));

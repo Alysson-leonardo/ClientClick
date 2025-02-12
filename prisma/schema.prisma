@@ -13,6 +13,7 @@ model cliente {
   nascimento DateTime @db.Date
   email      String   @unique(map: "email_UNIQUE") @db.VarChar(45)
   senha      String   @db.VarChar(80)
+  pedidos    pedido[]
 }
 
 model prestador {
@@ -20,8 +21,16 @@ model prestador {
   nome_prestador       String   @db.VarChar(45)
   nascimento_prestador DateTime @db.Date
   profissao_prestador  String   @db.VarChar(45)
-  cidade_prestador     String   @db.VarChar(45)
   email_prestador      String   @unique(map: "email_prestador_UNIQUE") @db.VarChar(45)
   senha_prestador      String   @db.VarChar(80)
+  cidade_prestador     String   @db.VarChar(45)
+}
 
+model pedido {
+  id_pedido     Int     @id @default(autoincrement())
+  clienteId     Int @map("id_cliente_FK")
+  nome_pedido   String @db.VarChar(100)
+  valor_pedido  Float  @db.Float
+  cliente       cliente  @relation(fields: [clienteId], references: [id_cliente])
+  @@index([clienteId], map: "id_cliente_FK")
 }
