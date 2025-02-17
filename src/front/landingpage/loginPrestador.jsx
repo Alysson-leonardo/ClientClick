@@ -37,7 +37,7 @@ function LoginPrestador() {
             localStorage.setItem("user", JSON.stringify(dadosPrestador));
             alert(respGetUserProvider.message);
             setTimeout(() => {
-              navigate("/page-cliente");
+              navigate("/page-prestador");
             }, 1000);
           } else {
             setMensagem(respGetUserProvider.message);

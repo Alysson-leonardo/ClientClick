@@ -14,6 +14,7 @@ model cliente {
   email      String   @unique(map: "email_UNIQUE") @db.VarChar(45)
   senha      String   @db.VarChar(80)
   pedidos    pedido[]
+  conversas    conversa[]
 }
 
 model prestador {
@@ -24,13 +25,25 @@ model prestador {
   email_prestador      String   @unique(map: "email_prestador_UNIQUE") @db.VarChar(45)
   senha_prestador      String   @db.VarChar(80)
   cidade_prestador     String   @db.VarChar(45)
+  conversas    conversa[]
+  
 }
 
 model pedido {
   id_pedido     Int     @id @default(autoincrement())
-  clienteId     Int @map("id_cliente_FK")
+  clienteId     Int 
   nome_pedido   String @db.VarChar(100)
   valor_pedido  Float  @db.Float
   cliente       cliente  @relation(fields: [clienteId], references: [id_cliente])
-  @@index([clienteId], map: "id_cliente_FK")
+  @@index([clienteId],map: "pedido_di_cliente")
+}
+
+model conversa {
+  id_conversa Int @id @default(autoincrement())
+  id_cliente_conversa  Int 
+  id_prestador_conversa Int 
+  cliente     cliente @relation(fields: [id_cliente_conversa], references: [id_cliente])
+  prestador     prestador @relation(fields: [id_prestador_conversa], references: [id_prestador])
+  @@index([id_cliente_conversa], map: "conversa_id_cliente")
+  @@index([id_prestador_conversa], map: "conversa_id_prestador")
 }

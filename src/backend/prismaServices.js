@@ -64,3 +64,34 @@ export async function createService(props) {
     },
   });
 }
+export async function createChat(props) {
+  return await prisma.conversa.create({
+    data: {
+      cliente: { connect: { id_cliente: props.id_cliente } },
+      prestador: { connect: { id_prestador: props.id_prestador } },
+    },
+  });
+}
+export async function getChat(props) {
+  console.log(props.id);
+  return await prisma.conversa.findMany({
+    where: {
+      OR: [
+        { id_cliente_conversa: props.id },
+        { id_prestador_conversa: props.id },
+      ],
+    },
+    include: {
+      cliente: {
+        select: {
+          nome: true,
+        },
+      },
+      prestador: {
+        select: {
+          nome_prestador: true,
+        },
+      },
+    },
+  });
+}

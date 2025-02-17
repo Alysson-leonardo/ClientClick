@@ -1,11 +1,11 @@
 import style from "./feedPrestadorPage.module.css";
 import FeedPrestadorPage from "./feedPrestadorPage";
-import ChatPage from "../Cliente/chatPage";
+import ChatPageProvider from "./chatPageProvider";
 function FeedChatPrestador() {
   return (
     <>
       <FeedPrestadorPage></FeedPrestadorPage>
-      <ChatPage></ChatPage>
+      <ChatPageProvider></ChatPageProvider>
     </>
   );
 }

@@ -5,3 +5,7 @@
   flex: 1 1 300px;
   background-color: rgb(233, 233, 233);
 }
+.conversas {
+  background-color: purple;
+  display: flex;
+}

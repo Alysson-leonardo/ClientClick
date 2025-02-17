@@ -1,10 +1,10 @@
 import FeedUsers from "./feedClientPage";
-import ChatPage from "./chatPage";
+import ChatPageClient from "./chatPageClient";
 function FeedChat() {
   return (
     <>
       <FeedUsers></FeedUsers>
-      <ChatPage></ChatPage>
+      <ChatPageClient></ChatPageClient>
     </>
   );
 }

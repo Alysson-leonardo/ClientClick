@@ -1,7 +1,7 @@
 import style from "./clientPage.module.css";
 import UserPage from "./userClientPage";
 import FeedUsers from "./feedClientPage";
-import ChatPage from "./chatPage";
+import ChatPageClient from "./chatPageClient";
 import FeedChat from "./feed&chat";
 import ServiceClient from "./componenteCliente/serviceClient";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
@@ -22,13 +22,16 @@ function PaginaCliente({ isDesktop }) {
               ></Route>
               <Route
                 path="/configuracoes"
-                element={<ChatPage></ChatPage>}
+                element={<ChatPageClient></ChatPageClient>}
               ></Route>
             </>
           ) : (
             <>
               <Route path="/" element={<FeedUsers></FeedUsers>}></Route>
-              <Route path="/chat" element={<ChatPage></ChatPage>}></Route>
+              <Route
+                path="/chat"
+                element={<ChatPageClient></ChatPageClient>}
+              ></Route>
             </>
           )}
         </Routes>

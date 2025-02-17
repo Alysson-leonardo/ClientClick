@@ -7,16 +7,20 @@ import {
   SearchUserProvider,
   allProviders,
   createService,
+  createChat,
+  getChat,
 } from "./prismaServices.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
-
-const server = express();
+import http from "http";
+import { Server } from "socket.io";
+const app = express();
 const port = 8080;
+const server = http.createServer(app);
 
-server.use(
+app.use(
   cors({
     origin: "http://localhost:5173",
     methods: ["GET", "POST"],
@@ -24,12 +28,18 @@ server.use(
     credentials: true,
   })
 );
-server.use(express.json());
-server.use(cookieParser());
+app.use(express.json());
+app.use(cookieParser());
 
+const io = new Server(server, {
+  cors: {
+    origin: "http>://localhost:5173",
+    methods: ["GET", "POST"],
+  },
+});
 // Rotas Cliente
 //cadastro
-server.post("/cadastroCliente", (req, resp) => {
+app.post("/cadastroCliente", (req, resp) => {
   const { nome, nascimento, email, senha } = req.body;
   if (!nome || !nascimento || !email || !senha) {
     return resp
@@ -73,7 +83,7 @@ server.post("/cadastroCliente", (req, resp) => {
   }
 });
 //Login
-server.post("/loginCliente", (req, resp) => {
+app.post("/loginCliente", (req, resp) => {
   const { email, senha } = req.body;
   if (!email || !senha) {
     return resp
@@ -118,7 +128,7 @@ server.post("/loginCliente", (req, resp) => {
 
 //Rotas Prestador
 //cadastro
-server.post("/cadastroPrestador", (req, resp) => {
+app.post("/cadastroPrestador", (req, resp) => {
   const { nome, dataNasc, profissao, cidade, email, senha } = req.body;
   if (!nome || !dataNasc || !profissao || !email || !senha || !cidade) {
     return resp
@@ -162,7 +172,7 @@ server.post("/cadastroPrestador", (req, resp) => {
   }
 });
 //login
-server.post("/loginPrestador", async (req, resp) => {
+app.post("/loginPrestador", async (req, resp) => {
   const { email, senha } = req.body;
   if (!email || !senha) {
     return resp
@@ -206,7 +216,7 @@ server.post("/loginPrestador", async (req, resp) => {
 });
 
 //Listar os prestadores
-server.get("/getProviders", (req, resp) => {
+app.get("/getProviders", (req, resp) => {
   const { cidade, profissao } = req.query;
   console.log(typeof cidade, cidade, typeof profissao, profissao, "backend");
   try {
@@ -246,7 +256,7 @@ function tokenVerify(req, resp, next) {
   next();
 }
 // rota privada usuario cliente
-server.get("/auth-client/:id", tokenVerify, async (req, resp) => {
+app.get("/auth-client/:id", tokenVerify, async (req, resp) => {
   const idUser = parseInt(req.userId.id);
   try {
     const user = await SearchUserClient("id_cliente", idUser);
@@ -265,7 +275,7 @@ server.get("/auth-client/:id", tokenVerify, async (req, resp) => {
     return resp.status(500).end();
   }
 });
-server.get("/auth-provider/:id", tokenVerify, async (req, resp) => {
+app.get("/auth-provider/:id", tokenVerify, async (req, resp) => {
   const userId = parseInt(req.userId.id);
   console.log(userId);
   try {
@@ -288,7 +298,7 @@ server.get("/auth-provider/:id", tokenVerify, async (req, resp) => {
 });
 
 // criar pedido
-server.post("/createService", async (req, resp) => {
+app.post("/createService", async (req, resp) => {
   const { serviceName, valueMax, idCliente } = req.body;
   const valueMaxFloat = parseFloat(valueMax);
   try {
@@ -305,4 +315,78 @@ server.post("/createService", async (req, resp) => {
     .status(201)
     .json({ ok: true, message: "pedido criado com sucesso!" });
 });
-server.listen(port, () => console.log(`Server rodando na porta ${port}`));
+
+//criar registro de conversa
+app.post("/createChat", tokenVerify, async (req, resp) => {
+  const idOtherUser = req.body.idOtherUser;
+  const idUser = parseInt(req.userId.id);
+  try {
+    const conversa = await createChat({
+      id_cliente: idOtherUser,
+      id_prestador: idUser,
+    });
+    if (!conversa) {
+      return resp
+        .status(404)
+        .json({ message: "não foi possivel criar a conversa!", ok: false });
+    }
+    return resp
+      .status(201)
+      .json({ ok: true, message: "conversa criada com sucesso" });
+  } catch (error) {
+    console.log(error);
+    resp.status(500).end();
+  }
+});
+
+//buscar conversas
+
+app.get("/searchChat", tokenVerify, async (req, resp) => {
+  const idUser = parseInt(req.userId.id);
+  try {
+    const conversas = await getChat({ id: idUser });
+    if (conversas.length === 0) {
+      return resp
+        .status(400)
+        .json({ message: "o usuario não possui nenhuma conversa!", ok: false });
+    }
+    return resp.status(200).json({ listConversas: conversas, ok: true });
+  } catch (error) {
+    console.log(error);
+    return resp.status(500).end();
+  }
+});
+
+// WebSocket.io
+io.use((socket, next) => {
+  const token = socket.handshake.query.token;
+  if (!token) {
+    return next(new Error("token não fornecido"));
+  }
+  try {
+    const secret = process.env.SECRET;
+    const decoded = jwt.verify(token, secret);
+    socket.userId = decoded.id;
+    next();
+  } catch (error) {
+    return next(new Error("token invalido"));
+  }
+});
+
+io.on("connection", (socket) => {
+  //entrar na sala
+  socket.on("entrar_sala", (userId2) => {
+    const userId1 = socket.userId;
+    const roomId = [userId1, userId2].sort().join("_");
+    socket.join(roomId);
+  });
+
+  //manda mensagem na sala
+  socket.on("mensagem_sala", ({ roomId, mensagem }) => {
+    io.to(roomId).emit("mensagem_sala", mensagem);
+  });
+
+  // sair da sala
+  socket.on("disconnect", () => {});
+});
+app.listen(port, () => console.log(`Server rodando na porta ${port}`));

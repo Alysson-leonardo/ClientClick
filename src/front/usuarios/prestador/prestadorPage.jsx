@@ -1,7 +1,7 @@
 import style from "./prestadorPage.module.css";
 import UserPrestadorPage from "./userPrestadorPage";
 import FeedPrestadorPage from "./feedPrestadorPage";
-import ChatPage from "../Cliente/chatPage";
+import ChatPageProvider from "./chatPageProvider";
 import FeedChatPrestador from "./feed&chatPrestador";
 import { Routes, Route } from "react-router-dom";
 function PaginaPrestador({ isDesktop }) {
@@ -22,7 +22,7 @@ function PaginaPrestador({ isDesktop }) {
               ></Route>
               <Route
                 path="/configuracoes"
-                element={<ChatPage></ChatPage>}
+                element={<ChatPageProvider></ChatPageProvider>}
               ></Route>
             </>
           ) : (
@@ -31,7 +31,10 @@ function PaginaPrestador({ isDesktop }) {
                 path="/"
                 element={<FeedPrestadorPage></FeedPrestadorPage>}
               ></Route>
-              <Route path="/chat" element={<ChatPage></ChatPage>}></Route>
+              <Route
+                path="/chat"
+                element={<ChatPageProvider></ChatPageProvider>}
+              ></Route>
             </>
           )}
         </Routes>

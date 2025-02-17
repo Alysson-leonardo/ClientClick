@@ -1,5 +1,6 @@
 import styles from "./feedPrestadorPage.module.css";
 import CardUserProvider from "../../../componentes/cardUserProvider";
+import ButtonCreateChat from "./componentePrestador/buttonCreateChat";
 import { useState } from "react";
 function FeedPrestadorPage() {
   const [prestadores, setPrestadores] = useState([
@@ -64,14 +65,20 @@ function FeedPrestadorPage() {
     <div className={styles.userDiv}>
       <h1>Serviços</h1>
       {prestadores.map((user) => (
-        <CardUserProvider
-          id={user.id}
-          key={user.id}
-          nome={user.nome}
-          servico={user.servico}
-          valorMax={user.valorMax}
-          cidade={user.cidade}
-        ></CardUserProvider>
+        <div>
+          <CardUserProvider
+            id={user.id}
+            key={user.id}
+            nome={user.nome}
+            servico={user.servico}
+            valorMax={user.valorMax}
+            cidade={user.cidade}
+          ></CardUserProvider>
+          <ButtonCreateChat
+            nomeBotao={"Conversar"}
+            dados={user}
+          ></ButtonCreateChat>
+        </div>
       ))}
     </div>
   );
