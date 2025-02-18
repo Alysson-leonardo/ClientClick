@@ -21,7 +21,7 @@ function FeedPrestadorPage() {
   }, []);
   return (
     <div className={styles.userDiv}>
-      <h1>Serviços</h1>
+      <h1>Pedidos</h1>
       {prestadores.map((user) => (
         <div className={styles.card}>
           <CardUserProvider
