@@ -55,6 +55,25 @@ export async function allProviders(filters) {
     take: 10,
   });
 }
+// pegar pedidos
+export async function allPedidos() {
+  return await prisma.pedido.findMany({
+    select: {
+      id_pedido: true,
+      nome_pedido: true,
+      valor_pedido: true,
+      clienteId: true,
+      cliente: {
+        select: {
+          nome: true,
+          cidade: true,
+        },
+      },
+    },
+
+    take: 10,
+  });
+}
 export async function createService(props) {
   return await prisma.pedido.create({
     data: {

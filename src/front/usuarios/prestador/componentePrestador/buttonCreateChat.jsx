@@ -1,10 +1,5 @@
-import { io } from "socket.io-client";
-const token = localStorage.getItem("token");
-const socket = io("http://localhost:8080", {
-  query: { token },
-});
 function ButtonCreateChat(props) {
-  const idOtherUser = props.dados.id;
+  const idOtherUser = props.dados.clienteId;
   const handleSubmit = async () => {
     const createChat = await fetch("http://localhost:8080/createChat", {
       method: "POST",

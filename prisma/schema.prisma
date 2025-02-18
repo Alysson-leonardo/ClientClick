@@ -11,6 +11,7 @@ model cliente {
   id_cliente Int      @id @unique(map: "id_cliente_UNIQUE") @default(autoincrement())
   nome       String   @db.VarChar(45)
   nascimento DateTime @db.Date
+  cidade     String @db.VarChar(80)
   email      String   @unique(map: "email_UNIQUE") @db.VarChar(45)
   senha      String   @db.VarChar(80)
   pedidos    pedido[]
@@ -35,7 +36,7 @@ model pedido {
   nome_pedido   String @db.VarChar(100)
   valor_pedido  Float  @db.Float
   cliente       cliente  @relation(fields: [clienteId], references: [id_cliente])
-  @@index([clienteId],map: "pedido_di_cliente")
+  @@index([clienteId],map: "pedido_id_cliente")
 }
 
 model conversa {

@@ -9,6 +9,7 @@ function RegisterClient() {
   const [nome, setNome] = useState("");
   const [nascimento, setNascimento] = useState("");
   const [email, setEmail] = useState("");
+  const [cidade, setCidade] = useState("");
   //senha
   const [senha, setSenha] = useState("");
   const [senhaCor, setsenhaCor] = useState("black");
@@ -51,7 +52,7 @@ function RegisterClient() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ nome, nascimento, email, senha }),
+          body: JSON.stringify({ nome, nascimento, email, senha, cidade }),
         });
 
         const dados = await response.json();
@@ -61,6 +62,7 @@ function RegisterClient() {
           setNome("");
           setNascimento("");
           setEmail("");
+          setCidade("");
           setSenha("");
           setSenhaConfirm("");
           setsenhaCor("");
@@ -117,6 +119,24 @@ function RegisterClient() {
           onChange={(e) => setNascimento(e.target.value)}
           required
         />
+        <label htmlFor="cidadeName">Profissão</label>
+        <select
+          name="cidadeName"
+          id="Icidadae"
+          value={cidade}
+          onChange={(e) => setCidade(e.target.value)}
+          required
+        >
+          <option value="">Cidade</option>
+          <option value="Paranoa">Paranoa</option>
+          <option value="Itapoa">Itapoã</option>
+          <option value="brasilia">brasilia</option>
+          <option value="estrutural">estrutural</option>
+          <option value="bandeirante">bandeirante</option>
+          <option value="brazlandia">brazlandia</option>
+          <option value="sobradinho_2">sobradinho 2</option>
+          <option value="Sao_sebastiao">São sebastião</option>
+        </select>
         <label htmlFor="Iemail">Email</label>
         <input
           type="email"

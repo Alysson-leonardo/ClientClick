@@ -13,3 +13,8 @@
   background-color: rgb(113, 165, 248);
   flex-basis: 300px;
 }
+.card {
+  display: flex;
+  background-color: rgb(113, 165, 248);
+  flex-flow: column nowrap;
+}

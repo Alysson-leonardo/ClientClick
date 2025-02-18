@@ -9,6 +9,7 @@ import {
   createService,
   createChat,
   getChat,
+  allPedidos,
 } from "./prismaServices.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -40,8 +41,8 @@ const io = new Server(server, {
 // Rotas Cliente
 //cadastro
 app.post("/cadastroCliente", (req, resp) => {
-  const { nome, nascimento, email, senha } = req.body;
-  if (!nome || !nascimento || !email || !senha) {
+  const { nome, nascimento, email, senha, cidade } = req.body;
+  if (!nome || !nascimento || !email || !senha || !cidade) {
     return resp
       .status(400)
       .json({ message: "Todos os campos precisam ser preenchidos!" });
@@ -60,6 +61,7 @@ app.post("/cadastroCliente", (req, resp) => {
             nascimento: dataNasc,
             email,
             senha: senhaHash,
+            cidade: cidade,
           })
             .then((dados) => {
               console.log(dados);
@@ -237,6 +239,25 @@ app.get("/getProviders", (req, resp) => {
       });
   } catch (error) {
     console.log(error);
+  }
+});
+// pegar pedidos
+app.get("/getpedidos", async (req, resp) => {
+  try {
+    const pedidos = await allPedidos();
+    console.log(pedidos, "pedidos");
+    if (!pedidos || pedidos.length === 0) {
+      return resp
+        .status(404)
+        .json({ message: "não foi encontrado nenhum usuario" });
+    }
+    return resp.status(200).json({
+      listPedidos: pedidos,
+      ok: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return resp.status(500).end();
   }
 });
 
