@@ -15,11 +15,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
-import http from "http";
-import { Server } from "socket.io";
 const app = express();
 const port = 8080;
-const server = http.createServer(app);
 
 app.use(
   cors({
@@ -32,12 +29,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-const io = new Server(server, {
-  cors: {
-    origin: "http>://localhost:5173",
-    methods: ["GET", "POST"],
-  },
-});
 // Rotas Cliente
 //cadastro
 app.post("/cadastroCliente", (req, resp) => {
@@ -263,7 +254,7 @@ app.get("/getpedidos", async (req, resp) => {
 
 function tokenVerify(req, resp, next) {
   const token = req.cookies.token;
-  console.log(token, " token do middleware");
+
   if (!token) {
     return resp.status(401).json({ message: "acesso negado!" });
   }
@@ -379,35 +370,5 @@ app.get("/searchChat", tokenVerify, async (req, resp) => {
 });
 
 // WebSocket.io
-io.use((socket, next) => {
-  const token = socket.handshake.query.token;
-  if (!token) {
-    return next(new Error("token não fornecido"));
-  }
-  try {
-    const secret = process.env.SECRET;
-    const decoded = jwt.verify(token, secret);
-    socket.userId = decoded.id;
-    next();
-  } catch (error) {
-    return next(new Error("token invalido"));
-  }
-});
 
-io.on("connection", (socket) => {
-  //entrar na sala
-  socket.on("entrar_sala", (userId2) => {
-    const userId1 = socket.userId;
-    const roomId = [userId1, userId2].sort().join("_");
-    socket.join(roomId);
-  });
-
-  //manda mensagem na sala
-  socket.on("mensagem_sala", ({ roomId, mensagem }) => {
-    io.to(roomId).emit("mensagem_sala", mensagem);
-  });
-
-  // sair da sala
-  socket.on("disconnect", () => {});
-});
 app.listen(port, () => console.log(`Server rodando na porta ${port}`));
