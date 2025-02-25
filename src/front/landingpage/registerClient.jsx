@@ -119,7 +119,7 @@ function RegisterClient() {
           onChange={(e) => setNascimento(e.target.value)}
           required
         />
-        <label htmlFor="cidadeName">Profissão</label>
+        <label htmlFor="cidadeName">Cidade</label>
         <select
           name="cidadeName"
           id="Icidadae"
@@ -127,7 +127,7 @@ function RegisterClient() {
           onChange={(e) => setCidade(e.target.value)}
           required
         >
-          <option value="">Cidade</option>
+          <option value=""></option>
           <option value="Paranoa">Paranoa</option>
           <option value="Itapoa">Itapoã</option>
           <option value="brasilia">brasilia</option>
@@ -145,6 +145,7 @@ function RegisterClient() {
           placeholder="exemplo@gmail.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete="off"
           required
         />
         <label htmlFor="Isenha" style={{ color: senhaCor }}>

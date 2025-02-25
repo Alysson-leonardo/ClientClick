@@ -187,7 +187,6 @@ app.post("/loginPrestador", async (req, resp) => {
       const secret = process.env.SECRET;
       const idUsuario = String(user["id_prestador"]);
       const token = jwt.sign({ id: idUsuario }, secret, { expiresIn: "1h" });
-      console.log(token, "token antes do cookie");
       resp.cookie("token", token, {
         httpOnly: true,
         secure: false,
@@ -207,11 +206,15 @@ app.post("/loginPrestador", async (req, resp) => {
     return resp.status(500).end();
   }
 });
+// logout
 
+app.post("/logout", (req, resp) => {
+  resp.clearCookie("token", { path: "/" });
+  resp.status(200).json({ message: "usuario deslogado", ok: true });
+});
 //Listar os prestadores
 app.get("/getProviders", (req, resp) => {
   const { cidade, profissao } = req.query;
-  console.log(typeof cidade, cidade, typeof profissao, profissao, "backend");
   try {
     allProviders({ cidade: cidade, profissao: profissao })
       .then((providers) => {
@@ -330,24 +333,47 @@ app.post("/createService", async (req, resp) => {
 
 //criar registro de conversa
 app.post("/createChat", tokenVerify, async (req, resp) => {
-  const idOtherUser = req.body.idOtherUser;
-  const idUser = parseInt(req.userId.id);
-  try {
-    const conversa = await createChat({
-      id_cliente: idOtherUser,
-      id_prestador: idUser,
-    });
-    if (!conversa) {
+  if (req.body.user == "prestador") {
+    const id_cliente = req.body.id_other;
+    const id_prestador = parseInt(req.userId.id);
+    try {
+      const conversa = await createChat({
+        id_cliente: id_cliente,
+        id_prestador: id_prestador,
+      });
+      if (!conversa) {
+        return resp
+          .status(404)
+          .json({ message: "não foi possivel criar a conversa!", ok: false });
+      }
       return resp
-        .status(404)
-        .json({ message: "não foi possivel criar a conversa!", ok: false });
+        .status(201)
+        .json({ ok: true, message: "conversa criada com sucesso" });
+    } catch (error) {
+      console.log(error);
+      resp.status(500).end();
     }
-    return resp
-      .status(201)
-      .json({ ok: true, message: "conversa criada com sucesso" });
-  } catch (error) {
-    console.log(error);
-    resp.status(500).end();
+  } else if (req.body.user == "cliente") {
+    const id_prestador = req.body.id_other;
+    const id_cliente = parseInt(req.userId.id);
+    try {
+      const conversa = await createChat({
+        idConversa: String(id_cliente) + String(id_prestador),
+        id_cliente: id_cliente,
+        id_prestador: id_prestador,
+      });
+      if (!conversa) {
+        return resp
+          .status(404)
+          .json({ message: "não foi possivel criar a conversa!", ok: false });
+      }
+      return resp
+        .status(201)
+        .json({ ok: true, message: "conversa criada com sucesso" });
+    } catch (error) {
+      console.log(error);
+      resp.status(500).end();
+    }
   }
 });
 

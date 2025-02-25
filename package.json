@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "backend": "node ./src/backend/server.js",
-    "websocket": "node ./src/backend/serverIO.js"
+    "wsk": "node ./src/backend/serverIO.js"
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",

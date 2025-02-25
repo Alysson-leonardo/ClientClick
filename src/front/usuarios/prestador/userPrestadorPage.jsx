@@ -1,6 +1,23 @@
 import styles from "./UserPrestadorPage.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 function UserPrestadorPage({ isDesktop, dados }) {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    console.log("clicou no botão");
+    const userLogout = await fetch("http://localhost:8080/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    const response = await userLogout.json();
+    console.log(response.message);
+    if (response.ok) {
+      alert(response.message);
+      localStorage.removeItem("user");
+      setTimeout(() => {
+        navigate("/"), 2000;
+      });
+    }
+  };
   return (
     <div className={isDesktop ? styles.userDivDesktop : styles.userDivMobile}>
       <div className={isDesktop ? styles.topUserDesktop : styles.topUserMobile}>
@@ -27,6 +44,7 @@ function UserPrestadorPage({ isDesktop, dados }) {
       >
         <p>configurações</p>
         <p>acessibilidade</p>
+        <button onClick={handleLogout}>Sair</button>
       </div>
 
       <div

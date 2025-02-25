@@ -12,16 +12,15 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   console.log("se conectou");
   //entrar na sala
-  socket.on("entrar_sala", ({ id_cliente, id_user }) => {
-    console.log(id_cliente, "id cliente");
-    console.log(id_user, "id do usuario");
-    const roomId = [id_user, id_cliente].sort().join("_");
+  socket.on("entrar_sala", ({ currentRoom }) => {
+    console.log(currentRoom);
+    const roomId = currentRoom;
     socket.join(roomId);
   });
 
   //manda mensagem na sala
-  socket.on("mensagem_sala", ({ roomId, mensagem }) => {
-    io.to(roomId).emit("mensagem_sala", mensagem);
+  socket.on("mensagem_sala", ({ currentRoom, mensagem, user }) => {
+    io.to(currentRoom).emit("mensagem_sala", mensagem, user);
   });
 
   // sair da sala

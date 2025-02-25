@@ -1,12 +1,12 @@
 function ButtonCreateChat(props) {
-  const idOtherUser = props.dados.clienteId;
+  const id_other = props.id;
   const handleSubmit = async () => {
     const createChat = await fetch("http://localhost:8080/createChat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ idOtherUser }),
+      body: JSON.stringify({ id_other, user: props.user }),
       credentials: "include",
     });
     const response = await createChat.json();

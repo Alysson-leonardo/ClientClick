@@ -1,7 +1,7 @@
 import styles from "./chatPageProvider.module.css";
 import { io } from "socket.io-client";
 const user = JSON.parse(localStorage.getItem("user"));
-const userId = user.id;
+const userId = user?.id || null;
 const socket = io("http://localhost:3030", {
   transports: ["websocket"],
 });
@@ -11,6 +11,13 @@ function ChatPageProvider() {
   const [containerRender, setContainerRender] = useState(false);
   const [currentUserChat, setCurrentUserChat] = useState();
   const [currentRoom, setCurrentRoom] = useState();
+  const [mensagem, setMensagem] = useState("");
+  const [mensagens, setMensagens] = useState([]);
+  const [mensagensBackup, setMensagensBackup] = useState({
+    prestador: [],
+    cliente: [],
+  });
+  console.log(typeof mensagens.prestador);
   useEffect(() => {
     async function buscarConversas() {
       const busca = await fetch("http://localhost:8080/searchChat", {
@@ -31,19 +38,42 @@ function ChatPageProvider() {
     buscarConversas();
   }, []);
   function renderChat(id_cliente, id_user) {
-    console.log(id_cliente, "id cliente do render chat");
-    console.log(id_user, "id user do render chat");
-    setCurrentRoom([id_cliente, id_user].sort().join("_"));
+    const sala = [id_cliente, id_user].sort().join("_");
+    setCurrentRoom(sala);
     setCurrentUserChat(id_cliente);
     socket.emit("entrar_sala", {
-      id_cliente,
-      id_user,
+      currentRoom: sala,
     });
     setContainerRender(true);
   }
   function desrenderChat() {
     setContainerRender(false);
+    setMensagens({ prestador: [], cliente: [] });
   }
+  const enviarMensagem = (e) => {
+    e.preventDefault();
+    if (mensagem.trim()) {
+      socket.emit("mensagem_sala", {
+        currentRoom,
+        mensagem,
+        user: "prestador",
+      });
+      setMensagem("");
+    }
+  };
+  useEffect(() => {
+    const handleNovaMensagem = (msg, user) => {
+      setMensagensBackup((currentMensagens) => ({
+        ...currentMensagens,
+        [user]: [...currentMensagens[user], msg],
+      }));
+      setMensagens((currentMessages) => [...currentMessages, [user, msg]]);
+    };
+    socket.on("mensagem_sala", handleNovaMensagem);
+    return () => {
+      socket.off("mensagem_sala", handleNovaMensagem);
+    };
+  }, []);
   return (
     <div className={styles.userDiv}>
       <div className={styles.listchat}>
@@ -65,9 +95,33 @@ function ChatPageProvider() {
             <button onClick={desrenderChat}>X</button>
           </div>
           <div className={styles.chat}>
-            <p>sala: {currentRoom}</p>
-            <p>clinte: {currentUserChat}</p>
-            <p>usuario: {userId}</p>
+            <div className={styles.messages}>
+              {mensagens.map(([remetente, texto], index) =>
+                remetente == "prestador" ? (
+                  <p key={index} className={styles.prestadorMessage}>
+                    {texto} <strong> :{remetente}</strong>
+                  </p>
+                ) : (
+                  <p key={index} className={styles.clienteMessage}>
+                    <strong> {remetente}: </strong>
+                    {texto}
+                  </p>
+                )
+              )}
+            </div>
+            <div className={styles.submit}>
+              <form onSubmit={enviarMensagem}>
+                <input
+                  type="text"
+                  value={mensagem}
+                  onChange={(e) => {
+                    setMensagem(e.target.value);
+                  }}
+                  required
+                />
+                <button type="submit">Enviar</button>
+              </form>
+            </div>
           </div>
         </div>
       ) : (

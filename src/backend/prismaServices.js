@@ -86,6 +86,7 @@ export async function createService(props) {
 export async function createChat(props) {
   return await prisma.conversa.create({
     data: {
+      id_conversa: props.idConversa,
       cliente: { connect: { id_cliente: props.id_cliente } },
       prestador: { connect: { id_prestador: props.id_prestador } },
     },

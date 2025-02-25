@@ -34,7 +34,8 @@ function FeedPrestadorPage() {
           ></CardUserProvider>
           <ButtonCreateChat
             nomeBotao={"Conversar"}
-            dados={user}
+            id={user.clienteId}
+            user={"prestador"}
           ></ButtonCreateChat>
         </div>
       ))}

@@ -47,7 +47,7 @@ function LoginClient() {
             setMensagem(respGetUser.message);
             if (respGetUser.message == "acesso negado!") {
               setTimeout(() => {
-                navigate("/");
+                navigate("/loginClient");
               }, 3000);
             }
           }

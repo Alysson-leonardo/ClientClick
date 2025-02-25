@@ -4,6 +4,7 @@ import { useState } from "react";
 import styles from "./feedClientPage.module.css";
 // componentes
 import CardUser from "../../../componentes/cardUser";
+import ButtonCreateChat from "../prestador/componentePrestador/buttonCreateChat";
 import { useEffect } from "react";
 
 function FeedUsers() {
@@ -87,13 +88,20 @@ function FeedUsers() {
         <p>Nenhum prestador encontrado!</p>
       ) : (
         providers.map((provider) => (
-          <CardUser
-            id={provider.id_prestador}
-            key={provider.id_prestador}
-            nome={provider.nome_prestador}
-            profissao={provider.profissao_prestador}
-            cidade={provider.cidade_prestador}
-          ></CardUser>
+          <div className={styles.card}>
+            <CardUser
+              id={provider.id_prestador}
+              key={provider.id_prestador}
+              nome={provider.nome_prestador}
+              profissao={provider.profissao_prestador}
+              cidade={provider.cidade_prestador}
+            ></CardUser>
+            <ButtonCreateChat
+              user={"cliente"}
+              id={provider.id_prestador}
+              nomeBotao={"Conversar"}
+            ></ButtonCreateChat>
+          </div>
         ))
       )}
     </div>

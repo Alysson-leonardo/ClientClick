@@ -81,3 +81,7 @@ hr {
 .buttonUserDesktop {
   display: none;
 }
+.buttonLogout {
+  width: 50px;
+  background-color: rgb(246, 105, 105);
+}
