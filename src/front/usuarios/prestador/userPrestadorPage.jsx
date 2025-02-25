@@ -35,6 +35,7 @@ function UserPrestadorPage({ isDesktop, dados }) {
         <p>{dados.profissao}</p>
         <p>{dados.cidade}</p>
         <p>Pedidos</p>
+        <Link to={`/page-prestador/${dados.id}/`}>home</Link>
       </div>
       <hr />
       <div

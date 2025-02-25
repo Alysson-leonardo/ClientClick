@@ -23,37 +23,9 @@ function LoginClient() {
 
       const dados = await response.json();
       if (dados.ok) {
-        try {
-          const getUser = await fetch(
-            `http://localhost:8080/auth-client/${dados.id}`,
-            {
-              method: "GET",
-              credentials: "include",
-            }
-          );
-          const respGetUser = await getUser.json();
-          if (respGetUser.ok) {
-            const DadosUsuario = {
-              id: respGetUser.id,
-              nome: respGetUser.nome,
-              nascimento: respGetUser.nascimento,
-            };
-            localStorage.setItem("user", JSON.stringify(DadosUsuario));
-            alert(respGetUser.message);
-            setTimeout(() => {
-              navigate("/page-cliente");
-            }, 3000);
-          } else {
-            setMensagem(respGetUser.message);
-            if (respGetUser.message == "acesso negado!") {
-              setTimeout(() => {
-                navigate("/loginClient");
-              }, 3000);
-            }
-          }
-        } catch (error) {
-          console.log(error);
-        }
+        setTimeout(() => {
+          navigate("/page-cliente");
+        }, 1000);
       } else {
         alert(dados.message);
       }

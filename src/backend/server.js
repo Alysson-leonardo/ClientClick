@@ -237,13 +237,13 @@ app.get("/getProviders", (req, resp) => {
 });
 // pegar pedidos
 app.get("/getpedidos", async (req, resp) => {
+  const id_cliente = req.id_clinte;
   try {
-    const pedidos = await allPedidos();
-    console.log(pedidos, "pedidos");
+    const pedidos = await allPedidos(id_cliente);
     if (!pedidos || pedidos.length === 0) {
       return resp
         .status(404)
-        .json({ message: "não foi encontrado nenhum usuario" });
+        .json({ message: "não foi encontrado nenhum pedido" });
     }
     return resp.status(200).json({
       listPedidos: pedidos,
@@ -271,7 +271,7 @@ function tokenVerify(req, resp, next) {
   next();
 }
 // rota privada usuario cliente
-app.get("/auth-client/:id", tokenVerify, async (req, resp) => {
+app.get("/auth-client", tokenVerify, async (req, resp) => {
   const idUser = parseInt(req.userId.id);
   try {
     const user = await SearchUserClient("id_cliente", idUser);
@@ -290,9 +290,9 @@ app.get("/auth-client/:id", tokenVerify, async (req, resp) => {
     return resp.status(500).end();
   }
 });
-app.get("/auth-provider/:id", tokenVerify, async (req, resp) => {
+app.get("/auth-provider", tokenVerify, async (req, resp) => {
   const userId = parseInt(req.userId.id);
-  console.log(userId);
+
   try {
     const user = await SearchUserProvider("id_prestador", userId);
     if (!user) {

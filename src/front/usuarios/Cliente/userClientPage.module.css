@@ -13,6 +13,8 @@
 }
 
 .midUserDesktop {
+  display: flex;
+  flex-direction: column;
   flex: auto;
   padding: 10px 0px 0px 20px;
 }
@@ -48,6 +50,8 @@ hr {
   background-color: white;
 }
 .midUserMobile {
+  display: flex;
+  flex-direction: column;
   flex: auto;
   text-wrap: text;
   padding: 10px 5px 0px 5px;

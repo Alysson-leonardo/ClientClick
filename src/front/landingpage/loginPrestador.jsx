@@ -19,37 +19,9 @@ function LoginPrestador() {
       });
       const dados = await response.json();
       if (dados.ok) {
-        console.log(dados, "retorno do login");
-        try {
-          const getUserProvider = await fetch(
-            `http://localhost:8080/auth-provider/${dados.id}`,
-            { method: "GET", credentials: "include" }
-          );
-          const respGetUserProvider = await getUserProvider.json();
-          if (respGetUserProvider.ok) {
-            const dadosPrestador = {
-              id: respGetUserProvider.id,
-              nome: respGetUserProvider.nome,
-              profissao: respGetUserProvider.profissao,
-              cidade: respGetUserProvider.cidade,
-              nascimento: respGetUserProvider.nascimento,
-            };
-            localStorage.setItem("user", JSON.stringify(dadosPrestador));
-            alert(respGetUserProvider.message);
-            setTimeout(() => {
-              navigate("/page-prestador");
-            }, 1000);
-          } else {
-            setMensagem(respGetUserProvider.message);
-            if (respGetUserProvider.message == "acesso negado!") {
-              setTimeout(() => {
-                navigate("/");
-              }, 3000);
-            }
-          }
-        } catch (error) {
-          console.log(error);
-        }
+        setTimeout(() => {
+          navigate("/page-prestador");
+        }, 1000);
       } else {
         setMensagem(dados.message);
       }

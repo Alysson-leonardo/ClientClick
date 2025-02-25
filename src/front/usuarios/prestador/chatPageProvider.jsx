@@ -18,6 +18,7 @@ function ChatPageProvider() {
     cliente: [],
   });
   console.log(typeof mensagens.prestador);
+  console.log(typeof currentRoom);
   useEffect(() => {
     async function buscarConversas() {
       const busca = await fetch("http://localhost:8080/searchChat", {

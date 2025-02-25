@@ -33,6 +33,7 @@ function UserPage({ isDesktop, dados }) {
       </div>
       <hr className={isDesktop ? "" : styles.hrcolor} />
       <div className={isDesktop ? styles.midUserDesktop : styles.midUserMobile}>
+        <Link to={`/page-cliente/${dados.id}`}>home</Link>
         <Link to={`/page-cliente/${dados.id}/criar-pedido`}>criar pedido</Link>
         <p>Pedidos</p>
       </div>
