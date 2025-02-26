@@ -23,7 +23,7 @@ function FeedPrestadorPage() {
     <div className={styles.userDiv}>
       <h1>Pedidos</h1>
       {userPedidos.map((user) => (
-        <div className={styles.card}>
+        <div className={styles.card} key={user.id_pedido}>
           <CardUserProvider
             id={user.id_pedido}
             key={user.id_pedido}

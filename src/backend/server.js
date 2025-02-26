@@ -385,8 +385,9 @@ app.post("/createChat", tokenVerify, async (req, resp) => {
 
 app.get("/searchChat", tokenVerify, async (req, resp) => {
   const idUser = parseInt(req.userId.id);
+  const user = req.query.user;
   try {
-    const conversas = await getChat({ id: idUser });
+    const conversas = await getChat({ id: idUser, user: user });
     if (conversas.length === 0) {
       return resp
         .status(400)

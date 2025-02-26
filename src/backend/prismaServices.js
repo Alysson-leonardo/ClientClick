@@ -94,25 +94,40 @@ export async function createChat(props) {
   });
 }
 export async function getChat(props) {
-  console.log(props.id);
-  return await prisma.conversa.findMany({
-    where: {
-      OR: [
-        { id_cliente_conversa: props.id },
-        { id_prestador_conversa: props.id },
-      ],
-    },
-    include: {
-      cliente: {
-        select: {
-          nome: true,
+  if (props.user == "cliente") {
+    return await prisma.conversa.findMany({
+      where: {
+        id_cliente_conversa: props.id,
+      },
+      include: {
+        cliente: {
+          select: {
+            nome: true,
+          },
+        },
+        prestador: {
+          select: {
+            nome_prestador: true,
+          },
         },
       },
-      prestador: {
-        select: {
-          nome_prestador: true,
+    });
+  } else if (props.user == "prestador") {
+    return await prisma.conversa.findMany({
+      where: { id_prestador_conversa: props.id },
+
+      include: {
+        cliente: {
+          select: {
+            nome: true,
+          },
+        },
+        prestador: {
+          select: {
+            nome_prestador: true,
+          },
         },
       },
-    },
-  });
+    });
+  }
 }

@@ -19,13 +19,16 @@ function ChatPageClient() {
   });
   useEffect(() => {
     async function buscarConversas() {
-      const busca = await fetch("http://localhost:8080/searchChat", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const busca = await fetch(
+        "http://localhost:8080/searchChat?user=cliente",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
       const conversas = await busca.json();
       if (conversas.ok) {
         console.log(conversas.listConversas);
@@ -37,6 +40,7 @@ function ChatPageClient() {
     buscarConversas();
   }, []);
   function renderChat(id_prestador, id_user) {
+    setMensagens([]);
     const sala = [id_prestador, id_user].sort().join("_");
     setCurrentRoom(sala);
     setCurrentUserChat(id_prestador);
@@ -47,7 +51,7 @@ function ChatPageClient() {
   }
   function desrenderChat() {
     setContainerRender(false);
-    setMensagens({ prestador: [], cliente: [] });
+    setMensagens([]);
   }
   const enviarMensagem = (e) => {
     e.preventDefault();
@@ -70,6 +74,7 @@ function ChatPageClient() {
       socket.off("mensagem_sala", handleNovaMensagem);
     };
   }, []);
+
   return (
     <div className={styles.userDiv}>
       <div className={styles.listchat}>

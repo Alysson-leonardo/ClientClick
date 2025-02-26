@@ -17,17 +17,19 @@ function ChatPageProvider() {
     prestador: [],
     cliente: [],
   });
-  console.log(typeof mensagens.prestador);
-  console.log(typeof currentRoom);
+
   useEffect(() => {
     async function buscarConversas() {
-      const busca = await fetch("http://localhost:8080/searchChat", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const busca = await fetch(
+        "http://localhost:8080/searchChat?user=prestador",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
       const conversas = await busca.json();
       if (conversas.ok) {
         console.log(conversas.listConversas);
@@ -49,7 +51,8 @@ function ChatPageProvider() {
   }
   function desrenderChat() {
     setContainerRender(false);
-    setMensagens({ prestador: [], cliente: [] });
+    setMensagens([]);
+    setCurrentRoom("");
   }
   const enviarMensagem = (e) => {
     e.preventDefault();
