@@ -23,6 +23,7 @@ function LoginClient() {
 
       const dados = await response.json();
       if (dados.ok) {
+        alert(dados.message);
         setTimeout(() => {
           navigate("/page-cliente");
         }, 1000);

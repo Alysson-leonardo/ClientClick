@@ -24,7 +24,6 @@ function PaginaPrestador({ isDesktop }) {
             nascimento: respGetUserProvider.nascimento,
           };
           localStorage.setItem("user", JSON.stringify(dadosPrestador));
-          alert(respGetUserProvider.message);
         } else {
           if (respGetUserProvider.message == "acesso negado!") {
             setTimeout(() => {

@@ -110,7 +110,10 @@ app.post("/loginCliente", (req, resp) => {
         console.log(error);
         return resp.status(500).end();
       }
-      return resp.status(200).json({ id: user["id_cliente"], ok: true });
+      return resp.status(200).json({
+        ok: true,
+        message: "login feito com sucesso!",
+      });
     });
   } catch (error) {
     console.log(error);
@@ -198,8 +201,8 @@ app.post("/loginPrestador", async (req, resp) => {
       return resp.status(500).end();
     }
     return resp.status(200).json({
-      id: user["id_prestador"],
       ok: true,
+      message: "login feito com sucesso!",
     });
   } catch (error) {
     console.log(error);
