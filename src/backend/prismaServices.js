@@ -57,44 +57,23 @@ export async function allProviders(filters) {
 }
 // crud pedidos
 export async function allPedidos(id_cliente) {
-  if (id_cliente == null) {
-    return await prisma.pedido.findMany({
-      select: {
-        id_pedido: true,
-        nome_pedido: true,
-        valor_pedido: true,
-        clienteId: true,
-        cliente: {
-          select: {
-            nome: true,
-            cidade: true,
-          },
+  return await prisma.pedido.findMany({
+    where: { ...(id_cliente && { clienteId: { equals: id_cliente } }) },
+    select: {
+      id_pedido: true,
+      nome_pedido: true,
+      valor_pedido: true,
+      clienteId: true,
+      cliente: {
+        select: {
+          nome: true,
+          cidade: true,
         },
       },
+    },
 
-      take: 10,
-    });
-  } else {
-    return await prisma.pedido.findMany({
-      where: {
-        clienteId: { equals: id_cliente },
-      },
-      select: {
-        id_pedido: true,
-        nome_pedido: true,
-        valor_pedido: true,
-        clienteId: true,
-        cliente: {
-          select: {
-            nome: true,
-            cidade: true,
-          },
-        },
-      },
-
-      take: 10,
-    });
-  }
+    take: 10,
+  });
 }
 export async function createService(props) {
   return await prisma.pedido.create({

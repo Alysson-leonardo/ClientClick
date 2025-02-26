@@ -6,7 +6,7 @@ function CardUserProvider({ id, nome, servico, cidade, valorMax }) {
       <div>
         <h2>{cidade}</h2>
         <p>{servico}</p>
-        <img src="" alt="icone-profissão" />
+        <img src="" alt="icone-servico" />
       </div>
       <div>
         <h2>{valorMax}</h2>

@@ -4,6 +4,7 @@ import FeedUsers from "./feedClientPage";
 import ChatPageClient from "./chatPageClient";
 import FeedChat from "./feed&chat";
 import ServiceClient from "./componenteCliente/serviceClient";
+import ListServices from "./componenteCliente/listService";
 import {
   BrowserRouter as Router,
   Routes,
@@ -56,6 +57,10 @@ function PaginaCliente({ isDesktop }) {
               <Route
                 path="/criar-pedido"
                 element={<ServiceClient dados={userDados}></ServiceClient>}
+              ></Route>
+              <Route
+                path="/lista-pedidos"
+                element={<ListServices></ListServices>}
               ></Route>
               <Route
                 path="/configuracoes"

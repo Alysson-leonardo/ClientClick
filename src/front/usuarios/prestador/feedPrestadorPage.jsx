@@ -3,7 +3,7 @@ import CardUserProvider from "../../../componentes/cardUserProvider";
 import ButtonCreateChat from "./componentePrestador/buttonCreateChat";
 import { useState, useEffect } from "react";
 function FeedPrestadorPage() {
-  const [prestadores, setPrestadores] = useState([]);
+  const [userPedidos, setUserPedidos] = useState([]);
   useEffect(() => {
     const buscar = async () => {
       const pedidos = await fetch("http://localhost:8080/getpedidos", {
@@ -14,7 +14,7 @@ function FeedPrestadorPage() {
       });
       const response = await pedidos.json();
       if (response.ok) {
-        setPrestadores(response.listPedidos);
+        setUserPedidos(response.listPedidos);
       }
     };
     buscar();
@@ -22,7 +22,7 @@ function FeedPrestadorPage() {
   return (
     <div className={styles.userDiv}>
       <h1>Pedidos</h1>
-      {prestadores.map((user) => (
+      {userPedidos.map((user) => (
         <div className={styles.card}>
           <CardUserProvider
             id={user.id_pedido}

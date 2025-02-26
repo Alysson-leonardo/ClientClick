@@ -240,7 +240,8 @@ app.get("/getProviders", (req, resp) => {
 });
 // pegar pedidos
 app.get("/getpedidos", async (req, resp) => {
-  const id_cliente = req.id_clinte;
+  const id_cliente = parseInt(req.query.id);
+  console.log(id_cliente);
   try {
     const pedidos = await allPedidos(id_cliente);
     if (!pedidos || pedidos.length === 0) {
